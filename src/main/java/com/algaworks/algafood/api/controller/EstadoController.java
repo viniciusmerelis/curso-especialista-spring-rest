@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.EstadoDtoAssembler;
-import com.algaworks.algafood.api.disassembler.EstadoDtoInputDisassembler;
+import com.algaworks.algafood.api.assembler.disassembler.EstadoDtoInputDisassembler;
 import com.algaworks.algafood.api.model.EstadoDto;
 import com.algaworks.algafood.api.model.input.EstadoDtoInput;
 import com.algaworks.algafood.domain.model.Estado;

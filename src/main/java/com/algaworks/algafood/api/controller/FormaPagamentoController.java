@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.FormaPagamentoDtoAssembler;
-import com.algaworks.algafood.api.disassembler.FormaPagamentoDtoInputDisassembler;
+import com.algaworks.algafood.api.assembler.disassembler.FormaPagamentoDtoInputDisassembler;
 import com.algaworks.algafood.api.model.FormaPagamentoDto;
 import com.algaworks.algafood.api.model.input.FormaPagamentoDtoInput;
 import com.algaworks.algafood.domain.model.FormaPagamento;

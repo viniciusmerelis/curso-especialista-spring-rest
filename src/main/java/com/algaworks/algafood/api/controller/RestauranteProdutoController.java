@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.ProdutoDtoAssembler;
-import com.algaworks.algafood.api.disassembler.ProdutoDtoInputDisassembler;
+import com.algaworks.algafood.api.assembler.disassembler.ProdutoDtoInputDisassembler;
 import com.algaworks.algafood.api.model.ProdutoDto;
 import com.algaworks.algafood.api.model.input.ProdutoDtoInput;
 import com.algaworks.algafood.domain.model.Produto;
