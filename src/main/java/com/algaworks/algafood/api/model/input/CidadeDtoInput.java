@@ -4,9 +4,11 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.stereotype.Component;
+import lombok.Getter;
+import lombok.Setter;
 
-@Component
+@Setter
+@Getter
 public class CidadeDtoInput {
 
 	@NotBlank
