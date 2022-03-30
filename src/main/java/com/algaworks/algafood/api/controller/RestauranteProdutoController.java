@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,32 +32,39 @@ public class RestauranteProdutoController {
 
 	@Autowired
 	private ProdutoRepository produtoRepository;
-	
+
 	@Autowired
 	private ProdutoService produtoService;
-	
+
 	@Autowired
 	private RestauranteService restauranteService;
-	
+
 	@Autowired
 	private ProdutoDtoAssembler produtoDtoAssembler;
-	
+
 	@Autowired
 	private ProdutoDtoInputDisassembler produtoDtoInputDisassembler;
-	
+
 	@GetMapping
-	public List<ProdutoDto> listar(@PathVariable Long restauranteId) {
+	public List<ProdutoDto> listar(@PathVariable Long restauranteId,
+			@RequestParam(required = false) boolean incluirInativos) {
+		
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-		List<Produto> todosProdutos = produtoRepository.findByRestaurante(restaurante);
+		List<Produto> todosProdutos = null;
+		if (incluirInativos) {
+			todosProdutos = produtoRepository.findByRestaurante(restaurante);
+		} else {
+			todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
+		} 
 		return produtoDtoAssembler.toCollectionDto(todosProdutos);
 	}
-	
+
 	@GetMapping("/{produtoId}")
 	public ProdutoDto buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 		Produto produto = produtoService.buscarOuFalhar(restauranteId, produtoId);
-		return produtoDtoAssembler.toDto(produto);		
+		return produtoDtoAssembler.toDto(produto);
 	}
-	
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ProdutoDto adicionar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoDtoInput produtoDtoInput) {
@@ -66,7 +74,7 @@ public class RestauranteProdutoController {
 		produto = produtoService.salvar(produto);
 		return produtoDtoAssembler.toDto(produto);
 	}
-	
+
 	@PutMapping("/{produtoId}")
 	public ProdutoDto atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId,
 			@RequestBody @Valid ProdutoDtoInput produtoDtoInput) {
@@ -75,5 +83,5 @@ public class RestauranteProdutoController {
 		produtoAtual = produtoService.salvar(produtoAtual);
 		return produtoDtoAssembler.toDto(produtoAtual);
 	}
-	
+
 }
