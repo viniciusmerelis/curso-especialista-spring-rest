@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.algaworks.algafood.domain.repository.filter.PedidoFilter;
+import com.algaworks.algafood.infrastructure.repository.spec.PedidoSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,8 +49,8 @@ public class PedidoController {
 	private PedidoResumoDtoAssembler pedidoResumoDtoAssembler;
 	
 	@GetMapping
-	public List<PedidoResumoDto> listar() {
-		List<Pedido> todosPedidos = pedidoRepository.findAll();
+	public List<PedidoResumoDto> pesquisar(PedidoFilter filtro) {
+		List<Pedido> todosPedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro));
 		return pedidoResumoDtoAssembler.toCollectionDto(todosPedidos);
 	}
 	
