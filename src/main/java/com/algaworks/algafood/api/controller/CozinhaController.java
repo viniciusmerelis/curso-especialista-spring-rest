@@ -49,9 +49,9 @@ public class CozinhaController {
 	@GetMapping
 	public Page<CozinhaDto> listar(@PageableDefault(size = 10) Pageable pageable) {
 		Page<Cozinha> cozinhasPages = cozinhaRepository.findAll(pageable);
-		List<CozinhaDto> cozinhasDto = cozinhaDtoAssembler.toCollectionDto(cozinhasPages.getContent());
-		Page<CozinhaDto> cozinhasDtoPages = new PageImpl<>(cozinhasDto, pageable, cozinhasPages.getTotalElements());
-		return cozinhasDtoPages;
+		List<CozinhaDto> cozinhasDTO = cozinhaDtoAssembler.toCollectionDto(cozinhasPages.getContent());
+		Page<CozinhaDto> cozinhasPagesDTO = new PageImpl<>(cozinhasDTO, pageable, cozinhasPages.getTotalElements());
+		return cozinhasPagesDTO;
 	}
 
 	@GetMapping("/{cozinhaId}")

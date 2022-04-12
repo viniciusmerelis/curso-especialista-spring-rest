@@ -14,6 +14,10 @@ public class PedidoSpecs {
             root.fetch("restaurante").fetch("cozinha");
             root.fetch("cliente");
             var predicates = new ArrayList<>();
+            if (Pedido.class.equals(query.getResultType())) {
+                root.fetch("restaurante").fetch("cozinha");
+                root.fetch("cliente");
+            }
             if (filtro.getClienteId() != null) {
                 predicates.add(builder.equal(root.get("cliente"), filtro.getClienteId()));
             }
