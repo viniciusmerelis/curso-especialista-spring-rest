@@ -4,8 +4,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.algaworks.algafood.core.data.PageableTranslator;
 import com.algaworks.algafood.domain.repository.filter.PedidoFilter;
 import com.algaworks.algafood.infrastructure.repository.spec.PedidoSpecs;
+import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -37,49 +39,59 @@ import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 @RequestMapping("/pedidos")
 public class PedidoController {
 
-	@Autowired
-	private PedidoRepository pedidoRepository;
-	
-	@Autowired
-	private EmissaoPedidoService emissaoPedidoService;
-	
-	@Autowired
-	private PedidoDtoAssembler pedidoDtoAssembler;
-	
-	@Autowired
-	private PedidoDtoInputDisassembler pedidoDtoInputDisassembler;
-	
-	@Autowired
-	private PedidoResumoDtoAssembler pedidoResumoDtoAssembler;
-	
-	@GetMapping
-	public Page<PedidoResumoDto> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
-		Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
-		List<PedidoResumoDto> pedidosDTO = pedidoResumoDtoAssembler.toCollectionDto(pedidosPage.getContent());
-		Page<PedidoResumoDto> pedidosPageDTO = new PageImpl<>(pedidosDTO, pageable, pedidosPage.getTotalElements());
-		return pedidosPageDTO;
-	}
-	
-	@GetMapping("/{codigoPedido}")
-	public PedidoDto buscar(@PathVariable String codigoPedido) {
-		Pedido pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
-		return pedidoDtoAssembler.toDto(pedido);
-	}
-	
-	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public PedidoDto adicionar(@RequestBody @Valid PedidoDtoInput pedidoDtoInput) {
-		try {
-			Pedido novoPedido = pedidoDtoInputDisassembler.toDomainObject(pedidoDtoInput);
-			
-			// TODO pegar usuario autenticado
-			novoPedido.setCliente(new Usuario());
-			novoPedido.getCliente().setId(1L);
-			
-			novoPedido = emissaoPedidoService.emitir(novoPedido);
-			return pedidoDtoAssembler.toDto(novoPedido);
-		} catch (EntidadeNaoEncontradaException e) {
-			throw new NegocioException(e.getMessage(), e);
-		}
-	}
+    @Autowired
+    private PedidoRepository pedidoRepository;
+
+    @Autowired
+    private EmissaoPedidoService emissaoPedidoService;
+
+    @Autowired
+    private PedidoDtoAssembler pedidoDtoAssembler;
+
+    @Autowired
+    private PedidoDtoInputDisassembler pedidoDtoInputDisassembler;
+
+    @Autowired
+    private PedidoResumoDtoAssembler pedidoResumoDtoAssembler;
+
+    @GetMapping
+    public Page<PedidoResumoDto> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
+        pageable = traduzirPageable(pageable);
+        Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
+        List<PedidoResumoDto> pedidosDTO = pedidoResumoDtoAssembler.toCollectionDto(pedidosPage.getContent());
+        Page<PedidoResumoDto> pedidosPageDTO = new PageImpl<>(pedidosDTO, pageable, pedidosPage.getTotalElements());
+        return pedidosPageDTO;
+    }
+
+    @GetMapping("/{codigoPedido}")
+    public PedidoDto buscar(@PathVariable String codigoPedido) {
+        Pedido pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
+        return pedidoDtoAssembler.toDto(pedido);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public PedidoDto adicionar(@RequestBody @Valid PedidoDtoInput pedidoDtoInput) {
+        try {
+            Pedido novoPedido = pedidoDtoInputDisassembler.toDomainObject(pedidoDtoInput);
+
+            // TODO pegar usuario autenticado
+            novoPedido.setCliente(new Usuario());
+            novoPedido.getCliente().setId(1L);
+
+            novoPedido = emissaoPedidoService.emitir(novoPedido);
+            return pedidoDtoAssembler.toDto(novoPedido);
+        } catch (EntidadeNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
+    }
+
+    private Pageable traduzirPageable(Pageable apiPageable) {
+        var mapeamento = ImmutableMap.of(
+                "codigo", "codigo",
+                "nomeCliente", "cliente.nome",
+                "valorTotal", "valorTotal"
+        );
+        return PageableTranslator.translate(apiPageable, mapeamento);
+    }
 }
