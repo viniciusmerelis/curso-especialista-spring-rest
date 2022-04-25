@@ -5,7 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.algaworks.algafood.core.data.PageableTranslator;
-import com.algaworks.algafood.domain.repository.filter.PedidoFilter;
+import com.algaworks.algafood.domain.filter.PedidoFilter;
 import com.algaworks.algafood.infrastructure.repository.spec.PedidoSpecs;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
