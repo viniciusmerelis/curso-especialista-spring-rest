@@ -38,7 +38,6 @@ public class Pedido {
 	private Long id;
 	
 	private String codigo;
-	
 	private BigDecimal subtotal;
 	private BigDecimal taxaFrete;
 	private BigDecimal valorTotal;
@@ -51,7 +50,6 @@ public class Pedido {
 	
 	@CreationTimestamp
 	private OffsetDateTime dataCriacao;
-	
 	private OffsetDateTime dataConfirmacao;
 	private OffsetDateTime dataCancelamento;
     private OffsetDateTime dataEntrega;

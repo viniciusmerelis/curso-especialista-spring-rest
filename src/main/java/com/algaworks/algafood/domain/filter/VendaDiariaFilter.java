@@ -1,4 +1,4 @@
-package com.algaworks.algafood.domain.repository.filter;
+package com.algaworks.algafood.domain.filter;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,8 +8,7 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Setter
-public class PedidoFilter {
-    private Long clienteId;
+public class VendaDiariaFilter {
     private Long restauranteId;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime dataCriacaoInicio;
