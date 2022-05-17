@@ -13,20 +13,18 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RestauranteDtoInput {
-
 	@NotBlank
 	private String nome;
-	
+
 	@NotNull
 	@PositiveOrZero
 	private BigDecimal taxaFrete;
-	
+
 	@Valid
 	@NotNull
 	private CozinhaDtoIdInput cozinha;
-	
+
 	@Valid
 	@NotNull
 	private EnderecoDtoInput endereco;
-	
 }
