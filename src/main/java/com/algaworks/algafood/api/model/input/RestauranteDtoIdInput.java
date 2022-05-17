@@ -8,8 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RestauranteDtoIdInput {
-
 	@NotNull
 	private Long id;
-	
 }

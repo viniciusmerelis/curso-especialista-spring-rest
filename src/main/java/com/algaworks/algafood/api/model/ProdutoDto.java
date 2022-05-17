@@ -8,11 +8,9 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ProdutoDto {
-
 	private Long id;
     private String nome;
     private String descricao;
     private BigDecimal preco;
-    private Boolean ativo; 
-	
+    private Boolean ativo;
 }

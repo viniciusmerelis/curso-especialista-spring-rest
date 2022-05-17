@@ -12,7 +12,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ProdutoDtoInput {
-
 	@NotBlank
     private String nome;
     
@@ -25,5 +24,4 @@ public class ProdutoDtoInput {
     
     @NotNull
     private Boolean ativo;
-	
 }

@@ -17,7 +17,7 @@ public class RestauranteDto {
 	@JsonView(RestauranteView.ResumoListagem.class)
 	private String nome;
 	@JsonView(RestauranteView.ResumoListagem.class)
-	private BigDecimal precoFrete;
+	private BigDecimal taxaFrete;
 	@JsonView(RestauranteView.ResumoListagem.class)
 	private CozinhaDto cozinha;
 	private Boolean ativo;
