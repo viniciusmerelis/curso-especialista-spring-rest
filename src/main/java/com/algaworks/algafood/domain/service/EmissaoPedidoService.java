@@ -43,8 +43,7 @@ public class EmissaoPedidoService {
 		pedido.calcularValorTotal();
 		return pedidoRepository.save(pedido);
 	}
-	
-	@Transactional
+
 	private void validarPedido(Pedido pedido) {
 		Cidade cidade = cidadeService.buscarOuFalhar(pedido.getEnderecoEntrega().getCidade().getId());
 		Usuario cliente = usuarioService.buscarOuFalhar(pedido.getCliente().getId());
@@ -61,8 +60,7 @@ public class EmissaoPedidoService {
 					formaPagamento.getDescricao()));
 		}
 	}
-	
-	@Transactional
+
 	private void validarItens(Pedido pedido) {
 		pedido.getItens().forEach(item -> {
 			Produto produto = produtoService.buscarOuFalhar(pedido.getRestaurante().getId(),
