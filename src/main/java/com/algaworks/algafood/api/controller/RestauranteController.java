@@ -5,7 +5,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,15 +50,19 @@ public class RestauranteController {
 
 	@JsonView(RestauranteView.ResumoListagem.class)
 	@GetMapping
-	public List<RestauranteDto> listar() {
-		return restauranteDtoAssembler.toCollectionDto(restauranteRepository.findAll());
+	public ResponseEntity<List<RestauranteDto>> listar() {
+		List<RestauranteDto> restaurantes = restauranteDtoAssembler
+				.toCollectionDto(restauranteRepository.findAll());
+		return ResponseEntity.ok()
+				.header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "http://localhost:8000")
+				.body(restaurantes);
 	}
 	
-	@JsonView(RestauranteView.ApenasIdENome.class)
-	@GetMapping(params = "projecao=apenas-id-e-nome")
-	public List<RestauranteDto> listarResumido() {
-		return listar();
-	}
+//	@JsonView(RestauranteView.ApenasIdENome.class)
+//	@GetMapping(params = "projecao=apenas-id-e-nome")
+//	public List<RestauranteDto> listarResumido() {
+//		return listar();
+//	}
 	
 	// Forma dinâmica
 //	@GetMapping
