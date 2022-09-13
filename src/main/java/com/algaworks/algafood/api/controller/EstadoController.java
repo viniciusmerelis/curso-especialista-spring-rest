@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.EstadoDtoAssembler;
-import com.algaworks.algafood.api.assembler.disassembler.EstadoDtoInputDisassembler;
+import com.algaworks.algafood.api.assembler.EstadoAssemblerDTO;
+import com.algaworks.algafood.api.assembler.disassembler.EstadoInputDisassemblerDTO;
 import com.algaworks.algafood.api.model.EstadoDto;
 import com.algaworks.algafood.api.model.input.EstadoDtoInput;
 import com.algaworks.algafood.domain.model.Estado;
@@ -36,20 +36,20 @@ public class EstadoController {
 	private EstadoService estadoService;
 	
 	@Autowired
-	private EstadoDtoAssembler estadoDtoAssembler;
+	private EstadoAssemblerDTO estadoAssemblerDTO;
 	
-	private EstadoDtoInputDisassembler estadoDtoDisassembler;
+	private EstadoInputDisassemblerDTO estadoDtoDisassembler;
 
 	@GetMapping
 	public List<EstadoDto> listar() {
 		List<Estado> todosEstados = estadoRepository.findAll();
-		return estadoDtoAssembler.toCollectionDto(todosEstados);
+		return estadoAssemblerDTO.toCollectionDto(todosEstados);
 	}
 
 	@GetMapping("/{estadoId}")
 	public EstadoDto buscar(@PathVariable Long estadoId) {
 		Estado estado = estadoService.buscarOuFalhar(estadoId);
-		return estadoDtoAssembler.toDto(estado);
+		return estadoAssemblerDTO.toDto(estado);
 	}
 
 	@PostMapping
@@ -57,7 +57,7 @@ public class EstadoController {
 	public EstadoDto adicionar(@RequestBody @Valid EstadoDtoInput estadoDtoInput) {
 		Estado estado = estadoDtoDisassembler.toDomainObject(estadoDtoInput);
 		estado = estadoService.salvar(estado);
-		return estadoDtoAssembler.toDto(estado);
+		return estadoAssemblerDTO.toDto(estado);
 	}
 
 	@PutMapping("/{estadoId}")
@@ -65,7 +65,7 @@ public class EstadoController {
 		Estado estadoAtual = estadoService.buscarOuFalhar(estadoId);
 		estadoDtoDisassembler.copyToDomainObject(estadoDtoInput, estadoAtual);
 		estadoAtual = estadoService.salvar(estadoAtual);
-		return estadoDtoAssembler.toDto(estadoAtual);
+		return estadoAssemblerDTO.toDto(estadoAtual);
 	}
 
 	@DeleteMapping("/{estadoId}")

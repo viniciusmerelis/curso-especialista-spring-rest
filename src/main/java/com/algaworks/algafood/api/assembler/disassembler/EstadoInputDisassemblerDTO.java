@@ -8,7 +8,7 @@ import com.algaworks.algafood.api.model.input.EstadoDtoInput;
 import com.algaworks.algafood.domain.model.Estado;
 
 @Component
-public class EstadoDtoInputDisassembler {
+public class EstadoInputDisassemblerDTO {
 
 	@Autowired
     private ModelMapper modelMapper;

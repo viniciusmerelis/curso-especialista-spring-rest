@@ -8,7 +8,7 @@ import com.algaworks.algafood.api.model.input.CozinhaDtoInput;
 import com.algaworks.algafood.domain.model.Cozinha;
 
 @Component
-public class CozinhaDtoInputDisassembler {
+public class CozinhaInputDisassemblerDTO {
 
 	@Autowired
     private ModelMapper modelMapper;

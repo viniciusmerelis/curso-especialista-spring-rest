@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.UsuarioDtoAssembler;
-import com.algaworks.algafood.api.assembler.disassembler.UsuarioDtoInputDisassembler;
+import com.algaworks.algafood.api.assembler.UsuarioAssemblerDTO;
+import com.algaworks.algafood.api.assembler.disassembler.UsuarioInputDisassemblerDTO;
 import com.algaworks.algafood.api.model.UsuarioDto;
 import com.algaworks.algafood.api.model.input.SenhaDtoInput;
 import com.algaworks.algafood.api.model.input.UsuarioComSenhaDtoInput;
@@ -36,37 +36,37 @@ public class UsuarioController {
 	private UsuarioService usuarioService;
 	
 	@Autowired
-	private UsuarioDtoAssembler usuarioDtoAssembler;
+	private UsuarioAssemblerDTO usuarioAssemblerDTO;
 	
 	@Autowired
-	private UsuarioDtoInputDisassembler usuarioDtoInputDisassembler;
+	private UsuarioInputDisassemblerDTO usuarioInputDisassemblerDTO;
 	
 	@GetMapping
 	public List<UsuarioDto> listar() {
 		List<Usuario> todosUsuarios = usuarioRepository.findAll();
-		return usuarioDtoAssembler.toCollectionDto(todosUsuarios);
+		return usuarioAssemblerDTO.toCollectionDto(todosUsuarios);
 	}
 	
 	@GetMapping("/{usuarioId}")
 	public UsuarioDto buscar(@PathVariable Long usuarioId) {
 		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
-		return usuarioDtoAssembler.toDto(usuario);
+		return usuarioAssemblerDTO.toDto(usuario);
 	}
 	
 	@PostMapping	
 	@ResponseStatus(HttpStatus.CREATED)
 	public UsuarioDto adicionar(@RequestBody UsuarioComSenhaDtoInput usuarioDtoInput) {
-		Usuario usuario = usuarioDtoInputDisassembler.toDomainObject(usuarioDtoInput);
+		Usuario usuario = usuarioInputDisassemblerDTO.toDomainObject(usuarioDtoInput);
 		usuario = usuarioService.salvar(usuario);
-		return usuarioDtoAssembler.toDto(usuario);
+		return usuarioAssemblerDTO.toDto(usuario);
 	}
 	
 	@PutMapping("/{usuarioId}")
 	public UsuarioDto atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioDtoInput usuarioDtoinput) {
 		Usuario usuarioAtual = usuarioService.buscarOuFalhar(usuarioId);
-		usuarioDtoInputDisassembler.copyToDomainObject(usuarioDtoinput, usuarioAtual);
+		usuarioInputDisassemblerDTO.copyToDomainObject(usuarioDtoinput, usuarioAtual);
 		usuarioAtual = usuarioService.salvar(usuarioAtual);
-		return usuarioDtoAssembler.toDto(usuarioAtual);
+		return usuarioAssemblerDTO.toDto(usuarioAtual);
 	}
 	
 	@PutMapping("/{usuarioId}/senha")

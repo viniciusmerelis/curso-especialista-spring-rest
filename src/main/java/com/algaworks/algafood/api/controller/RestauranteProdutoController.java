@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.ProdutoDtoAssembler;
-import com.algaworks.algafood.api.assembler.disassembler.ProdutoDtoInputDisassembler;
+import com.algaworks.algafood.api.assembler.ProdutoAssemblerDTO;
+import com.algaworks.algafood.api.assembler.disassembler.ProdutoInputDisassemblerDTO;
 import com.algaworks.algafood.api.model.ProdutoDto;
 import com.algaworks.algafood.api.model.input.ProdutoDtoInput;
 import com.algaworks.algafood.domain.model.Produto;
@@ -40,10 +40,10 @@ public class RestauranteProdutoController {
 	private RestauranteService restauranteService;
 
 	@Autowired
-	private ProdutoDtoAssembler produtoDtoAssembler;
+	private ProdutoAssemblerDTO produtoAssemblerDTO;
 
 	@Autowired
-	private ProdutoDtoInputDisassembler produtoDtoInputDisassembler;
+	private ProdutoInputDisassemblerDTO produtoInputDisassemblerDTO;
 
 	@GetMapping
 	public List<ProdutoDto> listar(@PathVariable Long restauranteId,
@@ -56,32 +56,32 @@ public class RestauranteProdutoController {
 		} else {
 			todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
 		} 
-		return produtoDtoAssembler.toCollectionDto(todosProdutos);
+		return produtoAssemblerDTO.toCollectionDto(todosProdutos);
 	}
 
 	@GetMapping("/{produtoId}")
 	public ProdutoDto buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 		Produto produto = produtoService.buscarOuFalhar(restauranteId, produtoId);
-		return produtoDtoAssembler.toDto(produto);
+		return produtoAssemblerDTO.toDto(produto);
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ProdutoDto adicionar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoDtoInput produtoDtoInput) {
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-		Produto produto = produtoDtoInputDisassembler.toDomainObject(produtoDtoInput);
+		Produto produto = produtoInputDisassemblerDTO.toDomainObject(produtoDtoInput);
 		produto.setRestaurante(restaurante);
 		produto = produtoService.salvar(produto);
-		return produtoDtoAssembler.toDto(produto);
+		return produtoAssemblerDTO.toDto(produto);
 	}
 
 	@PutMapping("/{produtoId}")
 	public ProdutoDto atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId,
 			@RequestBody @Valid ProdutoDtoInput produtoDtoInput) {
 		Produto produtoAtual = produtoService.buscarOuFalhar(restauranteId, produtoId);
-		produtoDtoInputDisassembler.copyToDomainObject(produtoDtoInput, produtoAtual);
+		produtoInputDisassemblerDTO.copyToDomainObject(produtoDtoInput, produtoAtual);
 		produtoAtual = produtoService.salvar(produtoAtual);
-		return produtoDtoAssembler.toDto(produtoAtual);
+		return produtoAssemblerDTO.toDto(produtoAtual);
 	}
 
 }

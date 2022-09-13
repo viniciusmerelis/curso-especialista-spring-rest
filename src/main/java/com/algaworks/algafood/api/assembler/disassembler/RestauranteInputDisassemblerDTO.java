@@ -10,7 +10,7 @@ import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 
 @Component
-public class RestauranteDtoInputDisassembler {
+public class RestauranteInputDisassemblerDTO {
 	
 	@Autowired
 	private ModelMapper modelMapper;

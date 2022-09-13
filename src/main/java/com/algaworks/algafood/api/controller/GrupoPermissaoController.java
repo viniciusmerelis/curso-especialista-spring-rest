@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.PermissaoDtoAssembler;
+import com.algaworks.algafood.api.assembler.PermissaoAssemblerDTO;
 import com.algaworks.algafood.api.model.PermissaoDto;
 import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.service.GrupoService;
@@ -25,12 +25,12 @@ public class GrupoPermissaoController {
 	private GrupoService grupoService;
 	
 	@Autowired
-	private PermissaoDtoAssembler permissaoDtoAssembler;
+	private PermissaoAssemblerDTO permissaoAssemblerDTO;
 	
 	@GetMapping
 	public List<PermissaoDto> listar(@PathVariable Long grupoId) {
 		Grupo grupo = grupoService.buscarOuFalhar(grupoId);
-		return permissaoDtoAssembler.toCollectionDto(grupo.getPermissoes());
+		return permissaoAssemblerDTO.toCollectionDto(grupo.getPermissoes());
 	}
 	
 	@PutMapping("/{permissaoId}")

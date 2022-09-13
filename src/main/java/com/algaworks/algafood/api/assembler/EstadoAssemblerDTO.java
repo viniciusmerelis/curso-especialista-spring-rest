@@ -10,7 +10,7 @@ import com.algaworks.algafood.api.model.EstadoDto;
 import com.algaworks.algafood.domain.model.Estado;
 
 @Component
-public class EstadoDtoAssembler {
+public class EstadoAssemblerDTO {
 
 	private ModelMapper modelMapper;
 	

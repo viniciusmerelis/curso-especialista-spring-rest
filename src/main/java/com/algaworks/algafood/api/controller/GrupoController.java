@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.GrupoDtoAssembler;
-import com.algaworks.algafood.api.assembler.disassembler.GrupoDtoInputDisassembler;
+import com.algaworks.algafood.api.assembler.GrupoAssemblerDTO;
+import com.algaworks.algafood.api.assembler.disassembler.GrupoInputDisassemblerDTO;
 import com.algaworks.algafood.api.model.GrupoDto;
 import com.algaworks.algafood.api.model.input.GrupoDtoInput;
 import com.algaworks.algafood.domain.model.Grupo;
@@ -35,21 +35,21 @@ public class GrupoController {
 	private GrupoService grupoService;
 	
 	@Autowired
-	private GrupoDtoAssembler grupoDtoAssembler;
+	private GrupoAssemblerDTO grupoAssemblerDTO;
 	
 	@Autowired
-	private GrupoDtoInputDisassembler grupoDtoDisassembler;
+	private GrupoInputDisassemblerDTO grupoDtoDisassembler;
 	
 	@GetMapping
 	public List<GrupoDto> listar() {
 		List<Grupo> todosGrupos = grupoRepository.findAll();
-		return grupoDtoAssembler.toCollectionDto(todosGrupos);
+		return grupoAssemblerDTO.toCollectionDto(todosGrupos);
 	}
 	
 	@GetMapping("/{grupoId}")
 	public GrupoDto buscar(@PathVariable Long grupoId) {
 		Grupo grupo = grupoService.buscarOuFalhar(grupoId);
-		return grupoDtoAssembler.toDto(grupo);
+		return grupoAssemblerDTO.toDto(grupo);
 	}
 	
 	@PostMapping
@@ -57,7 +57,7 @@ public class GrupoController {
 	public GrupoDto adicionar(@RequestBody GrupoDtoInput grupoDtoInput) {
 		Grupo grupo = grupoDtoDisassembler.toDomainObject(grupoDtoInput);
 		grupo = grupoService.salvar(grupo);
-		return grupoDtoAssembler.toDto(grupo);
+		return grupoAssemblerDTO.toDto(grupo);
 	}
 	
 	@PutMapping("/{grupoId}")
@@ -65,7 +65,7 @@ public class GrupoController {
 		Grupo grupoAtual = grupoService.buscarOuFalhar(grupoId);
 		grupoDtoDisassembler.copyToDomainObject(grupoDtoInput, grupoAtual);
 		grupoAtual = grupoService.salvar(grupoAtual);
-		return grupoDtoAssembler.toDto(grupoAtual);
+		return grupoAssemblerDTO.toDto(grupoAtual);
 	}
 	
 	@DeleteMapping("/{grupoId}")

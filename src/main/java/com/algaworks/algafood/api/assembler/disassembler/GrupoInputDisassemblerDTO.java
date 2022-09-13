@@ -8,7 +8,7 @@ import com.algaworks.algafood.api.model.input.GrupoDtoInput;
 import com.algaworks.algafood.domain.model.Grupo;
 
 @Component
-public class GrupoDtoInputDisassembler {
+public class GrupoInputDisassemblerDTO {
 
 	@Autowired
     private ModelMapper modelMapper;

@@ -9,7 +9,7 @@ import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Estado;
 
 @Component
-public class CidadeDtoInputDisassembler {
+public class CidadeInputDisassemblerDTO {
 
 	@Autowired
     private ModelMapper modelMapper;

@@ -11,7 +11,7 @@ import com.algaworks.algafood.api.model.RestauranteDto;
 import com.algaworks.algafood.domain.model.Restaurante;
 
 @Component
-public class RestauranteDtoAssembler {
+public class RestauranteAssemblerDTO {
 	
 	@Autowired
 	private ModelMapper modelMapper;

@@ -12,7 +12,7 @@ import com.algaworks.algafood.api.model.FormaPagamentoDto;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 
 @Component
-public class FormaPagamentoDtoAssembler {
+public class FormaPagamentoAssemblerDTO {
 
 	@Autowired
     private ModelMapper modelMapper;

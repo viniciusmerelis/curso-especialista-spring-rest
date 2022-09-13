@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.api.assembler.RestauranteDtoAssembler;
-import com.algaworks.algafood.api.assembler.disassembler.RestauranteDtoInputDisassembler;
+import com.algaworks.algafood.api.assembler.RestauranteAssemblerDTO;
+import com.algaworks.algafood.api.assembler.disassembler.RestauranteInputDisassemblerDTO;
 import com.algaworks.algafood.api.model.RestauranteDto;
 import com.algaworks.algafood.api.model.input.RestauranteDtoInput;
 import com.algaworks.algafood.api.model.view.RestauranteView;
@@ -39,15 +39,15 @@ public class RestauranteController {
     private RestauranteService restauranteService;
 
     @Autowired
-    private RestauranteDtoAssembler restauranteDtoAssembler;
+    private RestauranteAssemblerDTO restauranteAssemblerDTO;
 
     @Autowired
-    private RestauranteDtoInputDisassembler restauranteDtoDisassembler;
+    private RestauranteInputDisassemblerDTO restauranteDtoDisassembler;
 
     @JsonView(RestauranteView.ResumoListagem.class)
     @GetMapping
     public List<RestauranteDto> listar() {
-        return restauranteDtoAssembler.toCollectionDto(restauranteRepository.findAll());
+        return restauranteAssemblerDTO.toCollectionDto(restauranteRepository.findAll());
     }
 
     @JsonView(RestauranteView.ApenasIdENome.class)
@@ -74,7 +74,7 @@ public class RestauranteController {
     @GetMapping("/{restauranteId}")
     public RestauranteDto buscar(@PathVariable Long restauranteId) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-        return restauranteDtoAssembler.toDto(restaurante);
+        return restauranteAssemblerDTO.toDto(restaurante);
     }
 
     @PostMapping
@@ -82,7 +82,7 @@ public class RestauranteController {
     public RestauranteDto adicionar(@RequestBody @Valid RestauranteDtoInput restauranteDtoInput) {
         try {
             Restaurante restaurante = restauranteDtoDisassembler.toDomainObject(restauranteDtoInput);
-            return restauranteDtoAssembler.toDto(restauranteService.salvar(restaurante));
+            return restauranteAssemblerDTO.toDto(restauranteService.salvar(restaurante));
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
@@ -93,7 +93,7 @@ public class RestauranteController {
         try {
             Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
             restauranteDtoDisassembler.copyToDomainObject(restauranteDtoInput, restauranteAtual);
-            return restauranteDtoAssembler.toDto(restauranteService.salvar(restauranteAtual));
+            return restauranteAssemblerDTO.toDto(restauranteService.salvar(restauranteAtual));
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }

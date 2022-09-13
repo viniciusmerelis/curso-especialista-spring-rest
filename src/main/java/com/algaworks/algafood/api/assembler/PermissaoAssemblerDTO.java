@@ -12,7 +12,7 @@ import com.algaworks.algafood.api.model.PermissaoDto;
 import com.algaworks.algafood.domain.model.Permissao;
 
 @Component
-public class PermissaoDtoAssembler {
+public class PermissaoAssemblerDTO {
 
 	@Autowired
 	private ModelMapper modelMapper;

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.CidadeDtoAssembler;
-import com.algaworks.algafood.api.assembler.disassembler.CidadeDtoInputDisassembler;
+import com.algaworks.algafood.api.assembler.CidadeAssemblerDTO;
+import com.algaworks.algafood.api.assembler.disassembler.CidadeInputDisassemblerDTO;
 import com.algaworks.algafood.api.model.CidadeDto;
 import com.algaworks.algafood.api.model.input.CidadeDtoInput;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
@@ -34,21 +34,21 @@ public class CidadeController {
 	private CidadeService cidadeService;
 	
 	@Autowired
-	private CidadeDtoAssembler cidadeDtoAssembler;
+	private CidadeAssemblerDTO cidadeAssemblerDTO;
 	
 	@Autowired
-	private CidadeDtoInputDisassembler cidadeDtoDisassembler;
+	private CidadeInputDisassemblerDTO cidadeDtoDisassembler;
 
 	@GetMapping
 	public List<CidadeDto> listar() {
 		List<Cidade> todasCidades = cidadeRepository.findAll();
-		return cidadeDtoAssembler.toCollectionDto(todasCidades);
+		return cidadeAssemblerDTO.toCollectionDto(todasCidades);
 	}
 
 	@GetMapping("/{cidadeId}")
 	public CidadeDto buscar(@PathVariable Long cidadeId) {
 		Cidade cidade = cidadeService.buscarOuFalhar(cidadeId);
-		return cidadeDtoAssembler.toDto(cidade);
+		return cidadeAssemblerDTO.toDto(cidade);
 	}
 
 	@PostMapping
@@ -56,7 +56,7 @@ public class CidadeController {
 		try {
 			Cidade cidade = cidadeDtoDisassembler.toDomainObject(cidadeDtoInput);
 			cidade = cidadeService.salvar(cidade);
-			return cidadeDtoAssembler.toDto(cidade);
+			return cidadeAssemblerDTO.toDto(cidade);
 		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
@@ -68,7 +68,7 @@ public class CidadeController {
 			Cidade cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
 			cidadeDtoDisassembler.copyToDomainObject(cidadeDtoInput, cidadeAtual);
 			cidadeAtual = cidadeService.salvar(cidadeAtual);
-			return cidadeDtoAssembler.toDto(cidadeAtual);
+			return cidadeAssemblerDTO.toDto(cidadeAtual);
 		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}

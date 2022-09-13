@@ -8,22 +8,22 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.algaworks.algafood.api.model.UsuarioDto;
-import com.algaworks.algafood.domain.model.Usuario;
+import com.algaworks.algafood.api.model.GrupoDto;
+import com.algaworks.algafood.domain.model.Grupo;
 
 @Component
-public class UsuarioDtoAssembler {
+public class GrupoAssemblerDTO {
 
 	@Autowired
     private ModelMapper modelMapper;
     
-    public UsuarioDto toDto(Usuario usuario) {
-        return modelMapper.map(usuario, UsuarioDto.class);
+    public GrupoDto toDto(Grupo grupo) {
+        return modelMapper.map(grupo, GrupoDto.class);
     }
     
-    public List<UsuarioDto> toCollectionDto(Collection<Usuario> usuarios) {
-        return usuarios.stream()
-                .map(usuario -> toDto(usuario))
+    public List<GrupoDto> toCollectionDto(Collection<Grupo> grupos) {
+        return grupos.stream()
+                .map(grupo -> toDto(grupo))
                 .collect(Collectors.toList());
     }  
 	

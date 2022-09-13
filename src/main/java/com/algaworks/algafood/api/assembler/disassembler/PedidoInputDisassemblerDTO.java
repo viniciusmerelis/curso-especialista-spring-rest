@@ -8,7 +8,7 @@ import com.algaworks.algafood.api.model.input.PedidoDtoInput;
 import com.algaworks.algafood.domain.model.Pedido;
 
 @Component
-public class PedidoDtoInputDisassembler {
+public class PedidoInputDisassemblerDTO {
 
 	@Autowired
 	private ModelMapper modelMapper;

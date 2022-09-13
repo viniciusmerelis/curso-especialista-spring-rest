@@ -11,7 +11,7 @@ import com.algaworks.algafood.api.model.CidadeDto;
 import com.algaworks.algafood.domain.model.Cidade;
 
 @Component
-public class CidadeDtoAssembler {
+public class CidadeAssemblerDTO {
 
 	@Autowired
     private ModelMapper modelMapper;

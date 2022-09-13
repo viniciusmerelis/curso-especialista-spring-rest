@@ -8,7 +8,7 @@ import com.algaworks.algafood.api.model.input.FormaPagamentoDtoInput;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 
 @Component
-public class FormaPagamentoDtoInputDisassembler {
+public class FormaPagamentoInputDisassemblerDTO {
 
 	@Autowired
     private ModelMapper modelMapper;

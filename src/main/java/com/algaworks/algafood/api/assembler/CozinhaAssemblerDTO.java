@@ -11,7 +11,7 @@ import com.algaworks.algafood.api.model.CozinhaDto;
 import com.algaworks.algafood.domain.model.Cozinha;
 
 @Component
-public class CozinhaDtoAssembler {
+public class CozinhaAssemblerDTO {
 
 	@Autowired
     private ModelMapper modelMapper;
