@@ -25,9 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.algaworks.algafood.api.assembler.PedidoAssemblerDTO;
 import com.algaworks.algafood.api.assembler.PedidoResumoAssemblerDTO;
 import com.algaworks.algafood.api.assembler.disassembler.PedidoInputDisassemblerDTO;
-import com.algaworks.algafood.api.model.PedidoDto;
-import com.algaworks.algafood.api.model.PedidoResumoDto;
-import com.algaworks.algafood.api.model.input.PedidoDtoInput;
+import com.algaworks.algafood.api.model.PedidoDTO;
+import com.algaworks.algafood.api.model.PedidoResumoDTO;
+import com.algaworks.algafood.api.model.input.PedidoInputDTO;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Pedido;
@@ -55,25 +55,25 @@ public class PedidoController {
     private PedidoResumoAssemblerDTO pedidoResumoAssemblerDTO;
 
     @GetMapping
-    public Page<PedidoResumoDto> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
+    public Page<PedidoResumoDTO> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
         pageable = traduzirPageable(pageable);
         Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
-        List<PedidoResumoDto> pedidosDTO = pedidoResumoAssemblerDTO.toCollectionDto(pedidosPage.getContent());
-        Page<PedidoResumoDto> pedidosPageDTO = new PageImpl<>(pedidosDTO, pageable, pedidosPage.getTotalElements());
+        List<PedidoResumoDTO> pedidosDTO = pedidoResumoAssemblerDTO.toCollectionDto(pedidosPage.getContent());
+        Page<PedidoResumoDTO> pedidosPageDTO = new PageImpl<>(pedidosDTO, pageable, pedidosPage.getTotalElements());
         return pedidosPageDTO;
     }
 
     @GetMapping("/{codigoPedido}")
-    public PedidoDto buscar(@PathVariable String codigoPedido) {
+    public PedidoDTO buscar(@PathVariable String codigoPedido) {
         Pedido pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
         return pedidoAssemblerDTO.toDto(pedido);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PedidoDto adicionar(@RequestBody @Valid PedidoDtoInput pedidoDtoInput) {
+    public PedidoDTO adicionar(@RequestBody @Valid PedidoInputDTO pedidoInputDTO) {
         try {
-            Pedido novoPedido = pedidoInputDisassemblerDTO.toDomainObject(pedidoDtoInput);
+            Pedido novoPedido = pedidoInputDisassemblerDTO.toDomainObject(pedidoInputDTO);
 
             // TODO pegar usuario autenticado
             novoPedido.setCliente(new Usuario());

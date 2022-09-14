@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.FotoProdutoAssembler;
-import com.algaworks.algafood.api.model.FotoProdutoDto;
+import com.algaworks.algafood.api.model.FotoProdutoDTO;
 import com.algaworks.algafood.api.model.input.FotoProdutoInput;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.FotoProduto;
@@ -41,7 +41,7 @@ public class RestauranteProdutoFotoController {
     private FotoStorageService fotoStorageService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public FotoProdutoDto buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+    public FotoProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         FotoProduto fotoProduto = catalogoFotoService.buscarOuFalhar(restauranteId, produtoId);
         return fotoProdutoAssembler.toDto(fotoProduto);
     }
@@ -72,7 +72,7 @@ public class RestauranteProdutoFotoController {
     }
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public FotoProdutoDto atualizarFoto(@PathVariable Long restauranteId,
+    public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId,
                                         @PathVariable Long produtoId, @Valid FotoProdutoInput fotoProdutoInput) throws IOException {
 
         Produto produto = produtoService.buscarOuFalhar(restauranteId, produtoId);

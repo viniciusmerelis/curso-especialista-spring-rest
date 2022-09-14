@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.UsuarioAssemblerDTO;
-import com.algaworks.algafood.api.model.UsuarioDto;
+import com.algaworks.algafood.api.model.UsuarioDTO;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.RestauranteService;
 
@@ -28,7 +28,7 @@ public class RestauranteUsuarioResponsavelController {
 	private UsuarioAssemblerDTO usuarioAssemblerDTO;
 	
 	@GetMapping
-	public List<UsuarioDto> listar(@PathVariable Long restauranteId) {
+	public List<UsuarioDTO> listar(@PathVariable Long restauranteId) {
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
 		return usuarioAssemblerDTO.toCollectionDto(restaurante.getResponsaveis());
 	}

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.GrupoAssemblerDTO;
-import com.algaworks.algafood.api.model.GrupoDto;
+import com.algaworks.algafood.api.model.GrupoDTO;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.service.UsuarioService;
 
@@ -28,7 +28,7 @@ public class UsuarioGrupoController {
 	private GrupoAssemblerDTO grupoAssemblerDTO;
 	
 	@GetMapping
-	public List<GrupoDto> listar(@PathVariable Long usuarioId) {
+	public List<GrupoDTO> listar(@PathVariable Long usuarioId) {
 		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
 		return grupoAssemblerDTO.toCollectionDto(usuario.getGrupos());
 	}

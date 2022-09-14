@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.UsuarioAssemblerDTO;
 import com.algaworks.algafood.api.assembler.disassembler.UsuarioInputDisassemblerDTO;
-import com.algaworks.algafood.api.model.UsuarioDto;
-import com.algaworks.algafood.api.model.input.SenhaDtoInput;
-import com.algaworks.algafood.api.model.input.UsuarioComSenhaDtoInput;
-import com.algaworks.algafood.api.model.input.UsuarioDtoInput;
+import com.algaworks.algafood.api.model.UsuarioDTO;
+import com.algaworks.algafood.api.model.input.SenhaInputDTO;
+import com.algaworks.algafood.api.model.input.UsuarioComSenhaInputDTO;
+import com.algaworks.algafood.api.model.input.UsuarioInputDTO;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.UsuarioRepository;
 import com.algaworks.algafood.domain.service.UsuarioService;
@@ -42,36 +42,36 @@ public class UsuarioController {
 	private UsuarioInputDisassemblerDTO usuarioInputDisassemblerDTO;
 	
 	@GetMapping
-	public List<UsuarioDto> listar() {
+	public List<UsuarioDTO> listar() {
 		List<Usuario> todosUsuarios = usuarioRepository.findAll();
 		return usuarioAssemblerDTO.toCollectionDto(todosUsuarios);
 	}
 	
 	@GetMapping("/{usuarioId}")
-	public UsuarioDto buscar(@PathVariable Long usuarioId) {
+	public UsuarioDTO buscar(@PathVariable Long usuarioId) {
 		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
 		return usuarioAssemblerDTO.toDto(usuario);
 	}
 	
 	@PostMapping	
 	@ResponseStatus(HttpStatus.CREATED)
-	public UsuarioDto adicionar(@RequestBody UsuarioComSenhaDtoInput usuarioDtoInput) {
+	public UsuarioDTO adicionar(@RequestBody UsuarioComSenhaInputDTO usuarioDtoInput) {
 		Usuario usuario = usuarioInputDisassemblerDTO.toDomainObject(usuarioDtoInput);
 		usuario = usuarioService.salvar(usuario);
 		return usuarioAssemblerDTO.toDto(usuario);
 	}
 	
 	@PutMapping("/{usuarioId}")
-	public UsuarioDto atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioDtoInput usuarioDtoinput) {
+	public UsuarioDTO atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioInputDTO usuarioDtoinputDTO) {
 		Usuario usuarioAtual = usuarioService.buscarOuFalhar(usuarioId);
-		usuarioInputDisassemblerDTO.copyToDomainObject(usuarioDtoinput, usuarioAtual);
+		usuarioInputDisassemblerDTO.copyToDomainObject(usuarioDtoinputDTO, usuarioAtual);
 		usuarioAtual = usuarioService.salvar(usuarioAtual);
 		return usuarioAssemblerDTO.toDto(usuarioAtual);
 	}
 	
 	@PutMapping("/{usuarioId}/senha")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void alterarSenha(@PathVariable Long usuarioId, @RequestBody @Valid SenhaDtoInput senha) {
+	public void alterarSenha(@PathVariable Long usuarioId, @RequestBody @Valid SenhaInputDTO senha) {
 		usuarioService.alterarSenha(usuarioId, senha.getSenhaAtual(), senha.getNovaSenha());
 	}
 	

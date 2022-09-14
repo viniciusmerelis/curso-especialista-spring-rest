@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembler.FormaPagamentoAssemblerDTO;
 import com.algaworks.algafood.api.assembler.disassembler.FormaPagamentoInputDisassemblerDTO;
-import com.algaworks.algafood.api.model.FormaPagamentoDto;
-import com.algaworks.algafood.api.model.input.FormaPagamentoDtoInput;
+import com.algaworks.algafood.api.model.FormaPagamentoDTO;
+import com.algaworks.algafood.api.model.input.FormaPagamentoInputDTO;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 import com.algaworks.algafood.domain.service.FormaPagamentoService;
@@ -45,7 +45,7 @@ public class FormaPagamentoController {
 	private FormaPagamentoInputDisassemblerDTO formaPagamentoDtoDisassembler;
 	
 	@GetMapping
-	public ResponseEntity<List<FormaPagamentoDto>> listar(ServletWebRequest request) {
+	public ResponseEntity<List<FormaPagamentoDTO>> listar(ServletWebRequest request) {
 		ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
 		String eTag = "0";
 		OffsetDateTime dataUltimaAtualizacao = formaPagamentoRepository.obterUltimaDataAtualizacao();
@@ -56,7 +56,7 @@ public class FormaPagamentoController {
 			return null;
 		}
 		List<FormaPagamento> todasFormasPagamentos = formaPagamentoRepository.findAll();
-		List<FormaPagamentoDto> formaPagamentoDto = formaPagamentoAssemblerDTO.toCollectionDto(todasFormasPagamentos);
+		List<FormaPagamentoDTO> formaPagamentoDto = formaPagamentoAssemblerDTO.toCollectionDto(todasFormasPagamentos);
 		return ResponseEntity.ok()
 				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
 				.eTag(eTag)
@@ -64,9 +64,9 @@ public class FormaPagamentoController {
 	}
 	
 	@GetMapping("/{formaPagamentoId}")
-	public ResponseEntity<FormaPagamentoDto> buscar(@PathVariable Long formaPagamentoId) {
+	public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable Long formaPagamentoId) {
 		FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
-		FormaPagamentoDto formaPagamentoDto =  formaPagamentoAssemblerDTO.toDto(formaPagamento);
+		FormaPagamentoDTO formaPagamentoDto =  formaPagamentoAssemblerDTO.toDto(formaPagamento);
 		return ResponseEntity.ok()
 				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
 				.body(formaPagamentoDto);
@@ -74,17 +74,17 @@ public class FormaPagamentoController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public FormaPagamentoDto adicionar(@RequestBody FormaPagamentoDtoInput formaPagamentoDtoInput) {
-		FormaPagamento formaPagamento = formaPagamentoDtoDisassembler.toDomainObject(formaPagamentoDtoInput);
+	public FormaPagamentoDTO adicionar(@RequestBody FormaPagamentoInputDTO formaPagamentoInputDTO) {
+		FormaPagamento formaPagamento = formaPagamentoDtoDisassembler.toDomainObject(formaPagamentoInputDTO);
 		formaPagamento = formaPagamentoService.salvar(formaPagamento);
 		return formaPagamentoAssemblerDTO.toDto(formaPagamento);
 	}
 	
 	@PutMapping("/{formaPagamentoId}")
-	public FormaPagamentoDto atualizar(@PathVariable Long formaPagamentoId,
-			@RequestBody FormaPagamentoDtoInput formaPagamentoDtoInput) {
+	public FormaPagamentoDTO atualizar(@PathVariable Long formaPagamentoId,
+                                       @RequestBody FormaPagamentoInputDTO formaPagamentoInputDTO) {
 		FormaPagamento formaPagamentoAtual = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
-		formaPagamentoDtoDisassembler.copyToDomainObject(formaPagamentoDtoInput, formaPagamentoAtual);
+		formaPagamentoDtoDisassembler.copyToDomainObject(formaPagamentoInputDTO, formaPagamentoAtual);
 		formaPagamentoAtual = formaPagamentoService.salvar(formaPagamentoAtual);
 		return formaPagamentoAssemblerDTO.toDto(formaPagamentoAtual);
 	}

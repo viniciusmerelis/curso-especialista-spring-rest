@@ -8,7 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.algaworks.algafood.api.model.FormaPagamentoDto;
+import com.algaworks.algafood.api.model.FormaPagamentoDTO;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 
 @Component
@@ -17,11 +17,11 @@ public class FormaPagamentoAssemblerDTO {
 	@Autowired
     private ModelMapper modelMapper;
     
-    public FormaPagamentoDto toDto(FormaPagamento formaPagamento) {
-        return modelMapper.map(formaPagamento, FormaPagamentoDto.class);
+    public FormaPagamentoDTO toDto(FormaPagamento formaPagamento) {
+        return modelMapper.map(formaPagamento, FormaPagamentoDTO.class);
     }
     
-    public List<FormaPagamentoDto> toCollectionDto(Collection<FormaPagamento> formasPagamentos) {
+    public List<FormaPagamentoDTO> toCollectionDto(Collection<FormaPagamento> formasPagamentos) {
         return formasPagamentos.stream()
                 .map(formaPagamento -> toDto(formaPagamento))
                 .collect(Collectors.toList());

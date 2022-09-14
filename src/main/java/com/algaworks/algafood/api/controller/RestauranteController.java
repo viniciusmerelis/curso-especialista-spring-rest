@@ -2,7 +2,7 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.RestauranteAssemblerDTO;
 import com.algaworks.algafood.api.assembler.disassembler.RestauranteInputDisassemblerDTO;
-import com.algaworks.algafood.api.model.RestauranteDto;
+import com.algaworks.algafood.api.model.RestauranteDTO;
 import com.algaworks.algafood.api.model.input.RestauranteDtoInput;
 import com.algaworks.algafood.api.model.view.RestauranteView;
 import com.algaworks.algafood.domain.exception.CidadeNaoEncontradaException;
@@ -46,13 +46,13 @@ public class RestauranteController {
 
     @JsonView(RestauranteView.ResumoListagem.class)
     @GetMapping
-    public List<RestauranteDto> listar() {
+    public List<RestauranteDTO> listar() {
         return restauranteAssemblerDTO.toCollectionDto(restauranteRepository.findAll());
     }
 
     @JsonView(RestauranteView.ApenasIdENome.class)
     @GetMapping(params = "projecao=apenas-id-e-nome")
-    public List<RestauranteDto> listarResumido() {
+    public List<RestauranteDTO> listarResumido() {
         return listar();
     }
 
@@ -72,14 +72,14 @@ public class RestauranteController {
 //	}
 
     @GetMapping("/{restauranteId}")
-    public RestauranteDto buscar(@PathVariable Long restauranteId) {
+    public RestauranteDTO buscar(@PathVariable Long restauranteId) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
         return restauranteAssemblerDTO.toDto(restaurante);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RestauranteDto adicionar(@RequestBody @Valid RestauranteDtoInput restauranteDtoInput) {
+    public RestauranteDTO adicionar(@RequestBody @Valid RestauranteDtoInput restauranteDtoInput) {
         try {
             Restaurante restaurante = restauranteDtoDisassembler.toDomainObject(restauranteDtoInput);
             return restauranteAssemblerDTO.toDto(restauranteService.salvar(restaurante));
@@ -89,7 +89,7 @@ public class RestauranteController {
     }
 
     @PutMapping("/{restauranteId}")
-    public RestauranteDto atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteDtoInput restauranteDtoInput) {
+    public RestauranteDTO atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteDtoInput restauranteDtoInput) {
         try {
             Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
             restauranteDtoDisassembler.copyToDomainObject(restauranteDtoInput, restauranteAtual);
