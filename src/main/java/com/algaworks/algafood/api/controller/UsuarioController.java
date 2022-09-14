@@ -55,16 +55,16 @@ public class UsuarioController {
 	
 	@PostMapping	
 	@ResponseStatus(HttpStatus.CREATED)
-	public UsuarioDTO adicionar(@RequestBody UsuarioComSenhaInputDTO usuarioDtoInput) {
-		Usuario usuario = usuarioInputDisassemblerDTO.toDomainObject(usuarioDtoInput);
+	public UsuarioDTO adicionar(@RequestBody UsuarioComSenhaInputDTO usuarioInputDTO) {
+		Usuario usuario = usuarioInputDisassemblerDTO.toDomainObject(usuarioInputDTO);
 		usuario = usuarioService.salvar(usuario);
 		return usuarioAssemblerDTO.toDto(usuario);
 	}
 	
 	@PutMapping("/{usuarioId}")
-	public UsuarioDTO atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioInputDTO usuarioDtoinputDTO) {
+	public UsuarioDTO atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioInputDTO usuarioInputDTO) {
 		Usuario usuarioAtual = usuarioService.buscarOuFalhar(usuarioId);
-		usuarioInputDisassemblerDTO.copyToDomainObject(usuarioDtoinputDTO, usuarioAtual);
+		usuarioInputDisassemblerDTO.copyToDomainObject(usuarioInputDTO, usuarioAtual);
 		usuarioAtual = usuarioService.salvar(usuarioAtual);
 		return usuarioAssemblerDTO.toDto(usuarioAtual);
 	}

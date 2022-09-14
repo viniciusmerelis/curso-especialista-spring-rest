@@ -38,7 +38,7 @@ public class EstadoController {
 	@Autowired
 	private EstadoAssemblerDTO estadoAssemblerDTO;
 	
-	private EstadoInputDisassemblerDTO estadoDtoDisassembler;
+	private EstadoInputDisassemblerDTO estadoDisassemblerDTO;
 
 	@GetMapping
 	public List<EstadoDTO> listar() {
@@ -55,7 +55,7 @@ public class EstadoController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public EstadoDTO adicionar(@RequestBody @Valid EstadoInputDTO estadoInputDTO) {
-		Estado estado = estadoDtoDisassembler.toDomainObject(estadoInputDTO);
+		Estado estado = estadoDisassemblerDTO.toDomainObject(estadoInputDTO);
 		estado = estadoService.salvar(estado);
 		return estadoAssemblerDTO.toDto(estado);
 	}
@@ -63,7 +63,7 @@ public class EstadoController {
 	@PutMapping("/{estadoId}")
 	public EstadoDTO atualizar(@PathVariable Long estadoId, @RequestBody @Valid EstadoInputDTO estadoInputDTO) {
 		Estado estadoAtual = estadoService.buscarOuFalhar(estadoId);
-		estadoDtoDisassembler.copyToDomainObject(estadoInputDTO, estadoAtual);
+		estadoDisassemblerDTO.copyToDomainObject(estadoInputDTO, estadoAtual);
 		estadoAtual = estadoService.salvar(estadoAtual);
 		return estadoAssemblerDTO.toDto(estadoAtual);
 	}

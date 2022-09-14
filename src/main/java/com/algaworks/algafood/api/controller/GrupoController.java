@@ -38,7 +38,7 @@ public class GrupoController {
 	private GrupoAssemblerDTO grupoAssemblerDTO;
 	
 	@Autowired
-	private GrupoInputDisassemblerDTO grupoDtoDisassembler;
+	private GrupoInputDisassemblerDTO grupoDisassemblerDTO;
 	
 	@GetMapping
 	public List<GrupoDTO> listar() {
@@ -55,7 +55,7 @@ public class GrupoController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public GrupoDTO adicionar(@RequestBody GrupoInputDTO grupoInputDTO) {
-		Grupo grupo = grupoDtoDisassembler.toDomainObject(grupoInputDTO);
+		Grupo grupo = grupoDisassemblerDTO.toDomainObject(grupoInputDTO);
 		grupo = grupoService.salvar(grupo);
 		return grupoAssemblerDTO.toDto(grupo);
 	}
@@ -63,7 +63,7 @@ public class GrupoController {
 	@PutMapping("/{grupoId}")
 	public GrupoDTO atualizar(@PathVariable Long grupoId, @RequestBody @Valid GrupoInputDTO grupoInputDTO) {
 		Grupo grupoAtual = grupoService.buscarOuFalhar(grupoId);
-		grupoDtoDisassembler.copyToDomainObject(grupoInputDTO, grupoAtual);
+		grupoDisassemblerDTO.copyToDomainObject(grupoInputDTO, grupoAtual);
 		grupoAtual = grupoService.salvar(grupoAtual);
 		return grupoAssemblerDTO.toDto(grupoAtual);
 	}

@@ -42,7 +42,7 @@ public class RestauranteController {
     private RestauranteAssemblerDTO restauranteAssemblerDTO;
 
     @Autowired
-    private RestauranteInputDisassemblerDTO restauranteDtoDisassembler;
+    private RestauranteInputDisassemblerDTO restauranteDisassemblerDTO;
 
     @JsonView(RestauranteView.ResumoListagem.class)
     @GetMapping
@@ -79,9 +79,9 @@ public class RestauranteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RestauranteDTO adicionar(@RequestBody @Valid RestauranteDtoInput restauranteDtoInput) {
+    public RestauranteDTO adicionar(@RequestBody @Valid RestauranteDtoInput restauranteInputDTO) {
         try {
-            Restaurante restaurante = restauranteDtoDisassembler.toDomainObject(restauranteDtoInput);
+            Restaurante restaurante = restauranteDisassemblerDTO.toDomainObject(restauranteInputDTO);
             return restauranteAssemblerDTO.toDto(restauranteService.salvar(restaurante));
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
@@ -89,10 +89,10 @@ public class RestauranteController {
     }
 
     @PutMapping("/{restauranteId}")
-    public RestauranteDTO atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteDtoInput restauranteDtoInput) {
+    public RestauranteDTO atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteDtoInput restauranteInputDTO) {
         try {
             Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
-            restauranteDtoDisassembler.copyToDomainObject(restauranteDtoInput, restauranteAtual);
+            restauranteDisassemblerDTO.copyToDomainObject(restauranteInputDTO, restauranteAtual);
             return restauranteAssemblerDTO.toDto(restauranteService.salvar(restauranteAtual));
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());

@@ -37,7 +37,7 @@ public class CidadeController {
 	private CidadeAssemblerDTO cidadeAssemblerDTO;
 	
 	@Autowired
-	private CidadeInputDisassemblerDTO cidadeDtoDisassembler;
+	private CidadeInputDisassemblerDTO cidadeDisassemblerDTO;
 
 	@GetMapping
 	public List<CidadeDTO> listar() {
@@ -54,7 +54,7 @@ public class CidadeController {
 	@PostMapping
 	public CidadeDTO adicionar(@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
 		try {
-			Cidade cidade = cidadeDtoDisassembler.toDomainObject(cidadeInputDTO);
+			Cidade cidade = cidadeDisassemblerDTO.toDomainObject(cidadeInputDTO);
 			cidade = cidadeService.salvar(cidade);
 			return cidadeAssemblerDTO.toDto(cidade);
 		} catch (EstadoNaoEncontradoException e) {
@@ -66,7 +66,7 @@ public class CidadeController {
 	public CidadeDTO atualizar(@PathVariable Long cidadeId, @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
 		try {
 			Cidade cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
-			cidadeDtoDisassembler.copyToDomainObject(cidadeInputDTO, cidadeAtual);
+			cidadeDisassemblerDTO.copyToDomainObject(cidadeInputDTO, cidadeAtual);
 			cidadeAtual = cidadeService.salvar(cidadeAtual);
 			return cidadeAssemblerDTO.toDto(cidadeAtual);
 		} catch (EstadoNaoEncontradoException e) {

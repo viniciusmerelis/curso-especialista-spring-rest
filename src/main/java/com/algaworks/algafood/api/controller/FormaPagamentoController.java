@@ -42,7 +42,7 @@ public class FormaPagamentoController {
 	private FormaPagamentoAssemblerDTO formaPagamentoAssemblerDTO;
 	
 	@Autowired
-	private FormaPagamentoInputDisassemblerDTO formaPagamentoDtoDisassembler;
+	private FormaPagamentoInputDisassemblerDTO formaPagamentoDisassemblerDTO;
 	
 	@GetMapping
 	public ResponseEntity<List<FormaPagamentoDTO>> listar(ServletWebRequest request) {
@@ -75,7 +75,7 @@ public class FormaPagamentoController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public FormaPagamentoDTO adicionar(@RequestBody FormaPagamentoInputDTO formaPagamentoInputDTO) {
-		FormaPagamento formaPagamento = formaPagamentoDtoDisassembler.toDomainObject(formaPagamentoInputDTO);
+		FormaPagamento formaPagamento = formaPagamentoDisassemblerDTO.toDomainObject(formaPagamentoInputDTO);
 		formaPagamento = formaPagamentoService.salvar(formaPagamento);
 		return formaPagamentoAssemblerDTO.toDto(formaPagamento);
 	}
@@ -84,7 +84,7 @@ public class FormaPagamentoController {
 	public FormaPagamentoDTO atualizar(@PathVariable Long formaPagamentoId,
                                        @RequestBody FormaPagamentoInputDTO formaPagamentoInputDTO) {
 		FormaPagamento formaPagamentoAtual = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
-		formaPagamentoDtoDisassembler.copyToDomainObject(formaPagamentoInputDTO, formaPagamentoAtual);
+		formaPagamentoDisassemblerDTO.copyToDomainObject(formaPagamentoInputDTO, formaPagamentoAtual);
 		formaPagamentoAtual = formaPagamentoService.salvar(formaPagamentoAtual);
 		return formaPagamentoAssemblerDTO.toDto(formaPagamentoAtual);
 	}

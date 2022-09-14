@@ -44,7 +44,7 @@ public class CozinhaController {
 	private CozinhaAssemblerDTO cozinhaAssemblerDTO;
 	
 	@Autowired
-	private CozinhaInputDisassemblerDTO cozinhaDtoDisassembler;
+	private CozinhaInputDisassemblerDTO cozinhaDisassemblerDTO;
 
 	@GetMapping
 	public Page<CozinhaDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
@@ -63,7 +63,7 @@ public class CozinhaController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CozinhaDTO adicionar(@RequestBody @Valid CozinhaInputDTO cozinhaInputDTO) {
-		Cozinha cozinha = cozinhaDtoDisassembler.toDomainObject(cozinhaInputDTO);
+		Cozinha cozinha = cozinhaDisassemblerDTO.toDomainObject(cozinhaInputDTO);
 		cozinha = cozinhaService.salvar(cozinha);
 		return cozinhaAssemblerDTO.toDto(cozinha);
 	}
@@ -71,7 +71,7 @@ public class CozinhaController {
 	@PutMapping("/{cozinhaId}")
 	public CozinhaDTO atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid CozinhaInputDTO cozinhaInputDTO) {
 		Cozinha cozinhaAtual = cozinhaService.buscarOuFalhar(cozinhaId);
-		cozinhaDtoDisassembler.copyToDomainObject(cozinhaInputDTO, cozinhaAtual);
+		cozinhaDisassemblerDTO.copyToDomainObject(cozinhaInputDTO, cozinhaAtual);
 		cozinhaAtual = cozinhaService.salvar(cozinhaAtual);
 		return cozinhaAssemblerDTO.toDto(cozinhaAtual);
 	}
