@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.GrupoDtoAssembler;
-import com.algaworks.algafood.api.assembler.disassembler.GrupoDtoInputDisassembler;
-import com.algaworks.algafood.api.model.GrupoDto;
-import com.algaworks.algafood.api.model.input.GrupoDtoInput;
+import com.algaworks.algafood.api.assembler.GrupoAssemblerDTO;
+import com.algaworks.algafood.api.assembler.disassembler.GrupoInputDisassemblerDTO;
+import com.algaworks.algafood.api.model.GrupoDTO;
+import com.algaworks.algafood.api.model.input.GrupoInputDTO;
 import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.repository.GrupoRepository;
 import com.algaworks.algafood.domain.service.GrupoService;
@@ -35,37 +35,37 @@ public class GrupoController {
 	private GrupoService grupoService;
 	
 	@Autowired
-	private GrupoDtoAssembler grupoDtoAssembler;
+	private GrupoAssemblerDTO grupoAssemblerDTO;
 	
 	@Autowired
-	private GrupoDtoInputDisassembler grupoDtoDisassembler;
+	private GrupoInputDisassemblerDTO grupoDisassemblerDTO;
 	
 	@GetMapping
-	public List<GrupoDto> listar() {
+	public List<GrupoDTO> listar() {
 		List<Grupo> todosGrupos = grupoRepository.findAll();
-		return grupoDtoAssembler.toCollectionDto(todosGrupos);
+		return grupoAssemblerDTO.toCollectionDto(todosGrupos);
 	}
 	
 	@GetMapping("/{grupoId}")
-	public GrupoDto buscar(@PathVariable Long grupoId) {
+	public GrupoDTO buscar(@PathVariable Long grupoId) {
 		Grupo grupo = grupoService.buscarOuFalhar(grupoId);
-		return grupoDtoAssembler.toDto(grupo);
+		return grupoAssemblerDTO.toDto(grupo);
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public GrupoDto adicionar(@RequestBody GrupoDtoInput grupoDtoInput) {
-		Grupo grupo = grupoDtoDisassembler.toDomainObject(grupoDtoInput);
+	public GrupoDTO adicionar(@RequestBody GrupoInputDTO grupoInputDTO) {
+		Grupo grupo = grupoDisassemblerDTO.toDomainObject(grupoInputDTO);
 		grupo = grupoService.salvar(grupo);
-		return grupoDtoAssembler.toDto(grupo);
+		return grupoAssemblerDTO.toDto(grupo);
 	}
 	
 	@PutMapping("/{grupoId}")
-	public GrupoDto atualizar(@PathVariable Long grupoId, @RequestBody @Valid GrupoDtoInput grupoDtoInput ) {
+	public GrupoDTO atualizar(@PathVariable Long grupoId, @RequestBody @Valid GrupoInputDTO grupoInputDTO) {
 		Grupo grupoAtual = grupoService.buscarOuFalhar(grupoId);
-		grupoDtoDisassembler.copyToDomainObject(grupoDtoInput, grupoAtual);
+		grupoDisassemblerDTO.copyToDomainObject(grupoInputDTO, grupoAtual);
 		grupoAtual = grupoService.salvar(grupoAtual);
-		return grupoDtoAssembler.toDto(grupoAtual);
+		return grupoAssemblerDTO.toDto(grupoAtual);
 	}
 	
 	@DeleteMapping("/{grupoId}")

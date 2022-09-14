@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.algaworks.algafood.api.model.input.CozinhaInputDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,10 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.CozinhaDtoAssembler;
-import com.algaworks.algafood.api.assembler.disassembler.CozinhaDtoInputDisassembler;
-import com.algaworks.algafood.api.model.CozinhaDto;
-import com.algaworks.algafood.api.model.input.CozinhaDtoInput;
+import com.algaworks.algafood.api.assembler.CozinhaAssemblerDTO;
+import com.algaworks.algafood.api.assembler.disassembler.CozinhaInputDisassemblerDTO;
+import com.algaworks.algafood.api.model.CozinhaDTO;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CozinhaService;
@@ -41,39 +41,39 @@ public class CozinhaController {
 	private CozinhaService cozinhaService;
 	
 	@Autowired
-	private CozinhaDtoAssembler cozinhaDtoAssembler;
+	private CozinhaAssemblerDTO cozinhaAssemblerDTO;
 	
 	@Autowired
-	private CozinhaDtoInputDisassembler cozinhaDtoDisassembler;
+	private CozinhaInputDisassemblerDTO cozinhaDisassemblerDTO;
 
 	@GetMapping
-	public Page<CozinhaDto> listar(@PageableDefault(size = 10) Pageable pageable) {
+	public Page<CozinhaDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
 		Page<Cozinha> cozinhasPages = cozinhaRepository.findAll(pageable);
-		List<CozinhaDto> cozinhasDTO = cozinhaDtoAssembler.toCollectionDto(cozinhasPages.getContent());
-		Page<CozinhaDto> cozinhasPagesDTO = new PageImpl<>(cozinhasDTO, pageable, cozinhasPages.getTotalElements());
+		List<CozinhaDTO> cozinhasDTO = cozinhaAssemblerDTO.toCollectionDto(cozinhasPages.getContent());
+		Page<CozinhaDTO> cozinhasPagesDTO = new PageImpl<>(cozinhasDTO, pageable, cozinhasPages.getTotalElements());
 		return cozinhasPagesDTO;
 	}
 
 	@GetMapping("/{cozinhaId}")
-	public CozinhaDto buscar(@PathVariable Long cozinhaId) {
+	public CozinhaDTO buscar(@PathVariable Long cozinhaId) {
 		Cozinha cozinha = cozinhaService.buscarOuFalhar(cozinhaId);
-		return cozinhaDtoAssembler.toDto(cozinha);
+		return cozinhaAssemblerDTO.toDto(cozinha);
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public CozinhaDto adicionar(@RequestBody @Valid CozinhaDtoInput cozinhaDtoInput) {
-		Cozinha cozinha = cozinhaDtoDisassembler.toDomainObject(cozinhaDtoInput);
+	public CozinhaDTO adicionar(@RequestBody @Valid CozinhaInputDTO cozinhaInputDTO) {
+		Cozinha cozinha = cozinhaDisassemblerDTO.toDomainObject(cozinhaInputDTO);
 		cozinha = cozinhaService.salvar(cozinha);
-		return cozinhaDtoAssembler.toDto(cozinha);
+		return cozinhaAssemblerDTO.toDto(cozinha);
 	}
 
 	@PutMapping("/{cozinhaId}")
-	public CozinhaDto atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid CozinhaDtoInput cozinhaDtoInput) {
+	public CozinhaDTO atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid CozinhaInputDTO cozinhaInputDTO) {
 		Cozinha cozinhaAtual = cozinhaService.buscarOuFalhar(cozinhaId);
-		cozinhaDtoDisassembler.copyToDomainObject(cozinhaDtoInput, cozinhaAtual);
+		cozinhaDisassemblerDTO.copyToDomainObject(cozinhaInputDTO, cozinhaAtual);
 		cozinhaAtual = cozinhaService.salvar(cozinhaAtual);
-		return cozinhaDtoAssembler.toDto(cozinhaAtual);
+		return cozinhaAssemblerDTO.toDto(cozinhaAtual);
 	}
 
 	@DeleteMapping("/{cozinhaId}")
