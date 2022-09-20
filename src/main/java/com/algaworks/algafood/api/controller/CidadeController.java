@@ -5,6 +5,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.algaworks.algafood.api.model.input.CidadeInputDTO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +27,7 @@ import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CidadeService;
 
+@Api(tags = "Cidades")
 @RestController
 @RequestMapping(value = "/cidades")
 public class CidadeController {
@@ -39,18 +43,21 @@ public class CidadeController {
 	@Autowired
 	private CidadeInputDisassemblerDTO cidadeDisassemblerDTO;
 
+	@ApiOperation("Lista todas as cidades")
 	@GetMapping
 	public List<CidadeDTO> listar() {
 		List<Cidade> todasCidades = cidadeRepository.findAll();
 		return cidadeAssemblerDTO.toCollectionDto(todasCidades);
 	}
 
+	@ApiOperation("Busca uma cidade por ID")
 	@GetMapping("/{cidadeId}")
-	public CidadeDTO buscar(@PathVariable Long cidadeId) {
+	public CidadeDTO buscar(@ApiParam("ID de uma cidade") @PathVariable Long cidadeId) {
 		Cidade cidade = cidadeService.buscarOuFalhar(cidadeId);
 		return cidadeAssemblerDTO.toDto(cidade);
 	}
 
+	@ApiOperation("Cadastra uma cidade")
 	@PostMapping
 	public CidadeDTO adicionar(@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
 		try {
@@ -62,6 +69,7 @@ public class CidadeController {
 		}
 	}
 
+	@ApiOperation("Atualiza uma cidade por ID")
 	@PutMapping("/{cidadeId}")
 	public CidadeDTO atualizar(@PathVariable Long cidadeId, @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
 		try {
@@ -74,6 +82,7 @@ public class CidadeController {
 		}
 	}
 
+	@ApiOperation("Exclui uma cidade por ID")
 	@DeleteMapping("/{cidadeId}")
 	public void remover(@PathVariable Long cidadeId) {
 		cidadeService.excluir(cidadeId);
