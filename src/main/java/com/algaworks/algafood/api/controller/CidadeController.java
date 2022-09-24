@@ -52,14 +52,16 @@ public class CidadeController {
 
 	@ApiOperation("Busca uma cidade por ID")
 	@GetMapping("/{cidadeId}")
-	public CidadeDTO buscar(@ApiParam("ID de uma cidade") @PathVariable Long cidadeId) {
+	public CidadeDTO buscar(@ApiParam(value = "ID de uma cidade", example = "1") @PathVariable Long cidadeId) {
 		Cidade cidade = cidadeService.buscarOuFalhar(cidadeId);
 		return cidadeAssemblerDTO.toDto(cidade);
 	}
 
 	@ApiOperation("Cadastra uma cidade")
 	@PostMapping
-	public CidadeDTO adicionar(@ApiParam(name = "corpo", value = "Representação de uma nova cidade") @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
+	public CidadeDTO adicionar(
+			@ApiParam(name = "corpo", value = "Representação de uma nova cidade")
+			@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
 		try {
 			Cidade cidade = cidadeDisassemblerDTO.toDomainObject(cidadeInputDTO);
 			cidade = cidadeService.salvar(cidade);
@@ -87,8 +89,7 @@ public class CidadeController {
 
 	@ApiOperation("Exclui uma cidade por ID")
 	@DeleteMapping("/{cidadeId}")
-	public void remover(@ApiParam("ID de uma cidade") @PathVariable Long cidadeId) {
+	public void remover(@ApiParam(value = "ID de uma cidade", example = "1") @PathVariable Long cidadeId) {
 		cidadeService.excluir(cidadeId);
 	}
-	
 }

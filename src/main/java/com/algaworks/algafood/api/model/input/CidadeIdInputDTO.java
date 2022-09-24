@@ -8,8 +8,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CidadeIdInputDTO {
-
 	@NotNull
 	private Long id;
-	
 }
