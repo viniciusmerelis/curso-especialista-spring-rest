@@ -4,8 +4,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.algaworks.algafood.api.controller.openapi.GrupoControllerOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +27,8 @@ import com.algaworks.algafood.domain.repository.GrupoRepository;
 import com.algaworks.algafood.domain.service.GrupoService;
 
 @RestController
-@RequestMapping("/grupos")
-public class GrupoController {
+@RequestMapping(path = "/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class GrupoController implements GrupoControllerOpenApi {
 
 	@Autowired
 	private GrupoRepository grupoRepository;
@@ -40,18 +42,21 @@ public class GrupoController {
 	@Autowired
 	private GrupoInputDisassemblerDTO grupoDisassemblerDTO;
 	
+	@Override
 	@GetMapping
 	public List<GrupoDTO> listar() {
 		List<Grupo> todosGrupos = grupoRepository.findAll();
 		return grupoAssemblerDTO.toCollectionDto(todosGrupos);
 	}
 	
+	@Override
 	@GetMapping("/{grupoId}")
 	public GrupoDTO buscar(@PathVariable Long grupoId) {
 		Grupo grupo = grupoService.buscarOuFalhar(grupoId);
 		return grupoAssemblerDTO.toDto(grupo);
 	}
 	
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public GrupoDTO adicionar(@RequestBody GrupoInputDTO grupoInputDTO) {
@@ -60,6 +65,7 @@ public class GrupoController {
 		return grupoAssemblerDTO.toDto(grupo);
 	}
 	
+	@Override
 	@PutMapping("/{grupoId}")
 	public GrupoDTO atualizar(@PathVariable Long grupoId, @RequestBody @Valid GrupoInputDTO grupoInputDTO) {
 		Grupo grupoAtual = grupoService.buscarOuFalhar(grupoId);
@@ -68,6 +74,7 @@ public class GrupoController {
 		return grupoAssemblerDTO.toDto(grupoAtual);
 	}
 	
+	@Override
 	@DeleteMapping("/{grupoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long grupoId) {
