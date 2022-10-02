@@ -5,6 +5,7 @@ import com.algaworks.algafood.api.assembler.disassembler.RestauranteInputDisasse
 import com.algaworks.algafood.api.model.RestauranteDTO;
 import com.algaworks.algafood.api.model.input.RestauranteDtoInput;
 import com.algaworks.algafood.api.model.view.RestauranteView;
+import com.algaworks.algafood.api.openapi.model.RestauranteBasicoOpenApi;
 import com.algaworks.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -13,6 +14,9 @@ import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.RestauranteService;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,32 +48,21 @@ public class RestauranteController {
     @Autowired
     private RestauranteInputDisassemblerDTO restauranteDisassemblerDTO;
 
-    @JsonView(RestauranteView.ResumoListagem.class)
+    @ApiOperation(value = "Lista restaurantes", response = RestauranteBasicoOpenApi.class)
+    @ApiImplicitParams(@ApiImplicitParam(value = "Nome da projeção de pedidos", allowableValues = "apenas-nome",
+            name = "projecao", paramType = "query", type = "string"))
+    @JsonView(RestauranteView.Resumo.class)
     @GetMapping
     public List<RestauranteDTO> listar() {
         return restauranteAssemblerDTO.toCollectionDto(restauranteRepository.findAll());
     }
 
-    @JsonView(RestauranteView.ApenasIdENome.class)
-    @GetMapping(params = "projecao=apenas-id-e-nome")
+    @ApiOperation(value = "Lista restaurantes", hidden = true)
+    @JsonView(RestauranteView.ApenasNome.class)
+    @GetMapping(params = "projecao=apenas-nome")
     public List<RestauranteDTO> listarResumido() {
         return listar();
     }
-
-    // Forma dinâmica
-//	@GetMapping
-//	public MappingJacksonValue listar(@RequestParam(required = false) String projecao) {
-//		List<Restaurante> restaurantes = restauranteRepository.findAll();
-//		List<RestauranteDto> restaurantesDto = restauranteDtoAssembler.toCollectionDto(restaurantes);
-//		MappingJacksonValue restaurantesWrapper = new MappingJacksonValue(restaurantesDto);
-//		restaurantesWrapper.setSerializationView(RestauranteView.ResumoListagem.class);
-//		if ("apenas-id-e-nome".equals(projecao)) {
-//			restaurantesWrapper.setSerializationView(RestauranteView.ApenasIdENome.class);
-//		} else if ("completo".equals(projecao)) {
-//			restaurantesWrapper.setSerializationView(null);
-//		}
-//		return restaurantesWrapper;
-//	}
 
     @GetMapping("/{restauranteId}")
     public RestauranteDTO buscar(@PathVariable Long restauranteId) {

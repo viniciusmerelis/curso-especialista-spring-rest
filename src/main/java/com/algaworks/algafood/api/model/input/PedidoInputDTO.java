@@ -12,7 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PedidoInputDTO {
-
 	@Valid
 	@NotNull
 	private RestauranteIdInputDTO restaurante;
