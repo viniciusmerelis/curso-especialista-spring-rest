@@ -11,10 +11,10 @@ import lombok.Setter;
 @Setter
 public class CozinhaDTO {
 	@ApiModelProperty(example = "1")
-	@JsonView(RestauranteView.ResumoListagem.class)
+	@JsonView(RestauranteView.Resumo.class)
 	private Long id;
 
 	@ApiModelProperty(example = "Brasileira")
-	@JsonView(RestauranteView.ResumoListagem.class)
+	@JsonView(RestauranteView.Resumo.class)
 	private String nome;
 }
