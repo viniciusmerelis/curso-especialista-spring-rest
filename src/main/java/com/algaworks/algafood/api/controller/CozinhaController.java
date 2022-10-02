@@ -1,10 +1,14 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
+import com.algaworks.algafood.api.assembler.CozinhaAssemblerDTO;
+import com.algaworks.algafood.api.assembler.disassembler.CozinhaInputDisassemblerDTO;
+import com.algaworks.algafood.api.model.CozinhaDTO;
 import com.algaworks.algafood.api.model.input.CozinhaInputDTO;
+import com.algaworks.algafood.api.openapi.controller.CozinhaControllerOpenApi;
+import com.algaworks.algafood.domain.model.Cozinha;
+import com.algaworks.algafood.domain.repository.CozinhaRepository;
+import com.algaworks.algafood.domain.service.CozinhaService;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,18 +25,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.CozinhaAssemblerDTO;
-import com.algaworks.algafood.api.assembler.disassembler.CozinhaInputDisassemblerDTO;
-import com.algaworks.algafood.api.model.CozinhaDTO;
-import com.algaworks.algafood.domain.model.Cozinha;
-import com.algaworks.algafood.domain.repository.CozinhaRepository;
-import com.algaworks.algafood.domain.service.CozinhaService;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import javax.validation.Valid;
+import java.util.List;
 
 @JsonRootName("cozinha")
 @RestController
 @RequestMapping("/cozinhas")
-public class CozinhaController {
+public class CozinhaController implements CozinhaControllerOpenApi {
 
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
