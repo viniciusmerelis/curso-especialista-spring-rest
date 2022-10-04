@@ -24,11 +24,11 @@ public interface FormaPagamentoControllerOpenApi {
             @ApiResponse(code = 400, message = "ID da forma de pagamento inválido", response = Problem.class),
             @ApiResponse(code = 404, message = "Forma de pagamento não encontrada", response = Problem.class)
     })
-    ResponseEntity<FormaPagamentoDTO> buscar(@ApiParam(value = "ID de uma forma de pagamento", example = "1") Long formaPagamentoId);
+    ResponseEntity<FormaPagamentoDTO> buscar(@ApiParam(value = "ID de uma forma de pagamento", example = "1", required = true) Long formaPagamentoId);
 
     @ApiOperation("Cadastra uma forma de pagamento")
     @ApiResponses(@ApiResponse(code = 201, message = "Forma de pagamento cadastrada"))
-    FormaPagamentoDTO adicionar(@ApiParam(name = "corpo", value = "Representação de uma nova forma de pagamento") FormaPagamentoInputDTO formaPagamentoInputDTO);
+    FormaPagamentoDTO adicionar(@ApiParam(name = "corpo", value = "Representação de uma nova forma de pagamento", required = true) FormaPagamentoInputDTO formaPagamentoInputDTO);
 
     @ApiOperation("Atualiza uma cidade por ID")
     @ApiResponses({
@@ -36,13 +36,13 @@ public interface FormaPagamentoControllerOpenApi {
             @ApiResponse(code = 404, message = "Forma de pagamento não encontrada", response = Problem.class)
     })
     FormaPagamentoDTO atualizar(
-            @ApiParam(value = "ID de uma forma de pagamento", example = "1") Long formaPagamentoId,
-            @ApiParam(name = "corpo", value = "Representação de uma forma de pagamento com os novos dados") FormaPagamentoInputDTO formaPagamentoInputDTO);
+            @ApiParam(value = "ID de uma forma de pagamento", example = "1", required = true) Long formaPagamentoId,
+            @ApiParam(name = "corpo", value = "Representação de uma forma de pagamento com os novos dados", required = true) FormaPagamentoInputDTO formaPagamentoInputDTO);
 
     @ApiOperation("Exclui uma forma de pagamento por ID")
     @ApiResponses({
             @ApiResponse(code = 204, message = "Forma de pagamento excluída"),
             @ApiResponse(code = 404, message = "Forma de pagamento não encontrada", response = Problem.class)
     })
-    void remover(@ApiParam(value = "Exclui forma de pagamento pelo ID", example = "1") Long formaPagamentoId);
+    void remover(@ApiParam(value = "Exclui forma de pagamento pelo ID", example = "1", required = true) Long formaPagamentoId);
 }
