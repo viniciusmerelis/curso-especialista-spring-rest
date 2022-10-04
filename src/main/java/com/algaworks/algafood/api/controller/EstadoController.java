@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.algaworks.algafood.api.openapi.controller.EstadoControllerOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,7 +28,7 @@ import com.algaworks.algafood.domain.service.EstadoService;
 
 @RestController
 @RequestMapping(value = "/estados", produces = MediaType.APPLICATION_JSON_VALUE)
-public class EstadoController {
+public class EstadoController implements EstadoControllerOpenApi {
 
 	@Autowired
 	private EstadoRepository estadoRepository;
@@ -40,18 +41,21 @@ public class EstadoController {
 	
 	private EstadoInputDisassemblerDTO estadoDisassemblerDTO;
 
+	@Override
 	@GetMapping
 	public List<EstadoDTO> listar() {
 		List<Estado> todosEstados = estadoRepository.findAll();
 		return estadoAssemblerDTO.toCollectionDto(todosEstados);
 	}
 
+	@Override
 	@GetMapping("/{estadoId}")
 	public EstadoDTO buscar(@PathVariable Long estadoId) {
 		Estado estado = estadoService.buscarOuFalhar(estadoId);
 		return estadoAssemblerDTO.toDto(estado);
 	}
 
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public EstadoDTO adicionar(@RequestBody @Valid EstadoInputDTO estadoInputDTO) {
@@ -60,6 +64,7 @@ public class EstadoController {
 		return estadoAssemblerDTO.toDto(estado);
 	}
 
+	@Override
 	@PutMapping("/{estadoId}")
 	public EstadoDTO atualizar(@PathVariable Long estadoId, @RequestBody @Valid EstadoInputDTO estadoInputDTO) {
 		Estado estadoAtual = estadoService.buscarOuFalhar(estadoId);
@@ -68,6 +73,7 @@ public class EstadoController {
 		return estadoAssemblerDTO.toDto(estadoAtual);
 	}
 
+	@Override
 	@DeleteMapping("/{estadoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long estadoId) {
