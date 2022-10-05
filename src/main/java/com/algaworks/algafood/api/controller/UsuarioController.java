@@ -4,8 +4,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.algaworks.algafood.api.openapi.controller.UsuarioControllerOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,8 +28,8 @@ import com.algaworks.algafood.domain.repository.UsuarioRepository;
 import com.algaworks.algafood.domain.service.UsuarioService;
 
 @RestController
-@RequestMapping("/usuarios")
-public class UsuarioController {
+@RequestMapping(path = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
+public class UsuarioController implements UsuarioControllerOpenApi {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
@@ -41,19 +43,22 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioInputDisassemblerDTO usuarioInputDisassemblerDTO;
 	
+	@Override
 	@GetMapping
 	public List<UsuarioDTO> listar() {
 		List<Usuario> todosUsuarios = usuarioRepository.findAll();
 		return usuarioAssemblerDTO.toCollectionDto(todosUsuarios);
 	}
 	
+	@Override
 	@GetMapping("/{usuarioId}")
 	public UsuarioDTO buscar(@PathVariable Long usuarioId) {
 		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
 		return usuarioAssemblerDTO.toDto(usuario);
 	}
 	
-	@PostMapping	
+	@Override
+	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public UsuarioDTO adicionar(@RequestBody UsuarioComSenhaInputDTO usuarioInputDTO) {
 		Usuario usuario = usuarioInputDisassemblerDTO.toDomainObject(usuarioInputDTO);
@@ -61,6 +66,7 @@ public class UsuarioController {
 		return usuarioAssemblerDTO.toDto(usuario);
 	}
 	
+	@Override
 	@PutMapping("/{usuarioId}")
 	public UsuarioDTO atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioInputDTO usuarioInputDTO) {
 		Usuario usuarioAtual = usuarioService.buscarOuFalhar(usuarioId);
@@ -69,6 +75,7 @@ public class UsuarioController {
 		return usuarioAssemblerDTO.toDto(usuarioAtual);
 	}
 	
+	@Override
 	@PutMapping("/{usuarioId}/senha")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void alterarSenha(@PathVariable Long usuarioId, @RequestBody @Valid SenhaInputDTO senha) {
