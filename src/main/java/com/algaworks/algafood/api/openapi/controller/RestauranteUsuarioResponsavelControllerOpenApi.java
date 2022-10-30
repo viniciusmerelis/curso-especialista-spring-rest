@@ -7,14 +7,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 @Api(tags = "Restaurantes")
 public interface RestauranteUsuarioResponsavelControllerOpenApi {
     @ApiOperation("Lista os usuários responsáveis associados a restaurante")
     @ApiResponses(@ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class))
-    List<UsuarioDTO> listar(Long restauranteId);
+    CollectionModel<UsuarioDTO> listar(Long restauranteId);
 
     @ApiOperation("Associação de restaurante com usuário responsável")
     @ApiResponses({
