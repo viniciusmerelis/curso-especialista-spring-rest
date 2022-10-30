@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import com.algaworks.algafood.api.openapi.controller.EstadoControllerOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,27 +33,24 @@ public class EstadoController implements EstadoControllerOpenApi {
 
 	@Autowired
 	private EstadoRepository estadoRepository;
-
 	@Autowired
 	private EstadoService estadoService;
-	
 	@Autowired
 	private EstadoAssemblerDTO estadoAssemblerDTO;
-	
 	private EstadoInputDisassemblerDTO estadoDisassemblerDTO;
 
 	@Override
 	@GetMapping
-	public List<EstadoDTO> listar() {
-		List<Estado> todosEstados = estadoRepository.findAll();
-		return estadoAssemblerDTO.toCollectionDto(todosEstados);
+	public CollectionModel<EstadoDTO> listar() {
+		List<Estado> estados = estadoRepository.findAll();
+		return estadoAssemblerDTO.toCollectionModel(estados);
 	}
 
 	@Override
 	@GetMapping("/{estadoId}")
 	public EstadoDTO buscar(@PathVariable Long estadoId) {
 		Estado estado = estadoService.buscarOuFalhar(estadoId);
-		return estadoAssemblerDTO.toDto(estado);
+		return estadoAssemblerDTO.toModel(estado);
 	}
 
 	@Override
@@ -61,7 +59,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 	public EstadoDTO adicionar(@RequestBody @Valid EstadoInputDTO estadoInputDTO) {
 		Estado estado = estadoDisassemblerDTO.toDomainObject(estadoInputDTO);
 		estado = estadoService.salvar(estado);
-		return estadoAssemblerDTO.toDto(estado);
+		return estadoAssemblerDTO.toModel(estado);
 	}
 
 	@Override
@@ -70,7 +68,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 		Estado estadoAtual = estadoService.buscarOuFalhar(estadoId);
 		estadoDisassemblerDTO.copyToDomainObject(estadoInputDTO, estadoAtual);
 		estadoAtual = estadoService.salvar(estadoAtual);
-		return estadoAssemblerDTO.toDto(estadoAtual);
+		return estadoAssemblerDTO.toModel(estadoAtual);
 	}
 
 	@Override
