@@ -5,7 +5,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.algaworks.algafood.api.openapi.controller.RestauranteProdutoControllerOpenApi;
+import com.algaworks.algafood.domain.model.Pedido;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +54,6 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 	@GetMapping
 	public List<ProdutoDTO> listar(@PathVariable Long restauranteId,
 								   @RequestParam(required = false) boolean incluirInativos) {
-		
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
 		List<Produto> todosProdutos = null;
 		if (incluirInativos) {
