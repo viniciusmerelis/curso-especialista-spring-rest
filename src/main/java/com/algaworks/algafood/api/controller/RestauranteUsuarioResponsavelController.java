@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.LinkFactory;
 import com.algaworks.algafood.api.assembler.UsuarioAssemblerDTO;
 import com.algaworks.algafood.api.model.UsuarioDTO;
 import com.algaworks.algafood.api.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
@@ -17,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 @RestController
 @RequestMapping(path = "/restaurantes/{restauranteId}/responsaveis", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestauranteUsuarioResponsavelController implements RestauranteUsuarioResponsavelControllerOpenApi {
@@ -36,7 +34,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
 		return usuarioAssemblerDTO.toCollectionModel(restaurante.getResponsaveis())
 				.removeLinks()
-				.add(linkTo(methodOn(RestauranteUsuarioResponsavelController.class).listar(restauranteId)).withSelfRel());
+				.add(LinkFactory.linkToResponsaveisRestaurante(restauranteId));
 	}
 	
 	@Override

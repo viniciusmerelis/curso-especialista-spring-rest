@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.assembler;
 
+import com.algaworks.algafood.api.LinkFactory;
 import com.algaworks.algafood.api.controller.EstadoController;
 import com.algaworks.algafood.api.model.EstadoDTO;
 import com.algaworks.algafood.domain.model.Estado;
@@ -25,7 +26,7 @@ public class EstadoAssemblerDTO extends RepresentationModelAssemblerSupport<Esta
     public EstadoDTO toModel(Estado estado) {
         EstadoDTO estadoDTO = createModelWithId(estado.getId(), estado);
         modelMapper.map(estado, estadoDTO);
-        estadoDTO.add(linkTo(EstadoController.class).withRel("estados"));
+        estadoDTO.add(LinkFactory.linkToEstados("estados"));
         return estadoDTO;
     }
 
