@@ -3,6 +3,7 @@ package com.algaworks.algafood.api;
 import com.algaworks.algafood.api.controller.CidadeController;
 import com.algaworks.algafood.api.controller.CozinhaController;
 import com.algaworks.algafood.api.controller.EstadoController;
+import com.algaworks.algafood.api.controller.FluxoPedidoController;
 import com.algaworks.algafood.api.controller.FormaPagamentoController;
 import com.algaworks.algafood.api.controller.PedidoController;
 import com.algaworks.algafood.api.controller.RestauranteController;
@@ -10,6 +11,7 @@ import com.algaworks.algafood.api.controller.RestauranteProdutoController;
 import com.algaworks.algafood.api.controller.RestauranteUsuarioResponsavelController;
 import com.algaworks.algafood.api.controller.UsuarioController;
 import com.algaworks.algafood.api.controller.UsuarioGrupoController;
+import com.algaworks.algafood.domain.model.StatusPedido;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.TemplateVariable;
@@ -34,6 +36,18 @@ public class LinkFactory {
                 new TemplateVariable("dataCriacaoFim", TemplateVariable.VariableType.REQUEST_PARAM));
         String pedidosUrl = linkTo(PedidoController.class).toUri().toString();
         return Link.of(UriTemplate.of(pedidosUrl, PAGINACAO_VARIABLES.concat(filtroVariables)), "pedidos");
+    }
+
+    public static Link linkStatus(StatusPedido status, String codigoPedido) {
+        switch (status) {
+            case CONFIRMADO:
+                return linkTo(methodOn(FluxoPedidoController.class).confirmar(codigoPedido)).withRel("confirmar");
+            case ENTREGUE:
+                return linkTo(methodOn(FluxoPedidoController.class).entregar(codigoPedido)).withRel("entregar");
+            case CANCELADO:
+                return linkTo(methodOn(FluxoPedidoController.class).cancelar(codigoPedido)).withRel("cancelar");
+            default: throw new RuntimeException("Status não previsto " + status.name());
+        }
     }
 
     public static Link linkToRestaurante(Long id, String rel) {
@@ -131,5 +145,4 @@ public class LinkFactory {
     public static Link linkToCozinhas() {
         return linkToCozinhas(IanaLinkRelations.SELF.value());
     }
-
 }
