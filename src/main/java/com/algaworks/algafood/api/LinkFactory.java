@@ -88,6 +88,14 @@ public class LinkFactory {
         return linkTo(methodOn(RestauranteFormaPagamentoController.class).listar(restauranteId)).withRel(rel);
     }
 
+    public static Link linkToRestauranteFormasPagamento(Long restauranteId) {
+        return linkToRestauranteFormasPagamento(restauranteId, IanaLinkRelations.SELF.value());
+    }
+
+    public static Link linkToRestauranteFormaPagamentoDesassociar(Long restauranteId, Long formaPagamentoId, String rel) {
+        return linkTo(methodOn(RestauranteFormaPagamentoController.class).desassociar(restauranteId, formaPagamentoId)).withRel(rel);
+    }
+
     public static Link linkToRestauranteAbertura(Long restauranteId, String rel) {
         return linkTo(methodOn(RestauranteController.class).abrir(restauranteId)).withRel(rel);
     }
@@ -111,6 +119,14 @@ public class LinkFactory {
 
     public static Link linkToFormaPagamento(Long id) {
         return linkToFormaPagamento(id, IanaLinkRelations.SELF.value());
+    }
+
+    public static Link linkToFormasPagamento(String rel) {
+        return linkTo(FormaPagamentoController.class).withRel(rel);
+    }
+
+    public static Link linkToFormasPagamento() {
+        return linkToFormasPagamento(IanaLinkRelations.SELF.value());
     }
 
     // Cozinha
