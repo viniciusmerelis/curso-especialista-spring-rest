@@ -9,7 +9,7 @@ import org.springframework.hateoas.server.core.Relation;
 @Relation(collectionRelation = "restaurantes")
 @Getter
 @Setter
-public class RestauranteResumoDTO extends RepresentationModel<RestauranteResumoDTO> {
+public class RestauranteApenasNomeDTO extends RepresentationModel<RestauranteApenasNomeDTO> {
 	@ApiModelProperty(example = "1")
 	private Long id;
 

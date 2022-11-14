@@ -34,7 +34,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
 		return usuarioAssemblerDTO.toCollectionModel(restaurante.getResponsaveis())
 				.removeLinks()
-				.add(LinkFactory.linkToResponsaveisRestaurante(restauranteId));
+				.add(LinkFactory.linkToRestauranteResponsaveis(restauranteId));
 	}
 	
 	@Override

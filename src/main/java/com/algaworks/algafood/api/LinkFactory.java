@@ -7,10 +7,12 @@ import com.algaworks.algafood.api.controller.FluxoPedidoController;
 import com.algaworks.algafood.api.controller.FormaPagamentoController;
 import com.algaworks.algafood.api.controller.PedidoController;
 import com.algaworks.algafood.api.controller.RestauranteController;
+import com.algaworks.algafood.api.controller.RestauranteFormaPagamentoController;
 import com.algaworks.algafood.api.controller.RestauranteProdutoController;
 import com.algaworks.algafood.api.controller.RestauranteUsuarioResponsavelController;
 import com.algaworks.algafood.api.controller.UsuarioController;
 import com.algaworks.algafood.api.controller.UsuarioGrupoController;
+import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.StatusPedido;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.Link;
@@ -28,6 +30,7 @@ public class LinkFactory {
             new TemplateVariable("size", TemplateVariable.VariableType.REQUEST_PARAM),
             new TemplateVariable("sort", TemplateVariable.VariableType.REQUEST_PARAM));
 
+    // Pedido
     public static Link linkToPedido() {
         TemplateVariables filtroVariables = new TemplateVariables(
                 new TemplateVariable("clienteId", TemplateVariable.VariableType.REQUEST_PARAM),
@@ -38,7 +41,7 @@ public class LinkFactory {
         return Link.of(UriTemplate.of(pedidosUrl, PAGINACAO_VARIABLES.concat(filtroVariables)), "pedidos");
     }
 
-    public static Link linkStatus(StatusPedido status, String codigoPedido) {
+    public static Link linkToStatusPedido(StatusPedido status, String codigoPedido) {
         switch (status) {
             case CONFIRMADO:
                 return linkTo(methodOn(FluxoPedidoController.class).confirmar(codigoPedido)).withRel("confirmar");
@@ -46,10 +49,11 @@ public class LinkFactory {
                 return linkTo(methodOn(FluxoPedidoController.class).entregar(codigoPedido)).withRel("entregar");
             case CANCELADO:
                 return linkTo(methodOn(FluxoPedidoController.class).cancelar(codigoPedido)).withRel("cancelar");
-            default: throw new RuntimeException("Status não previsto " + status.name());
+            default: throw new NegocioException("Status não previsto: " + status.name());
         }
     }
 
+    // Restaurante
     public static Link linkToRestaurante(Long id, String rel) {
         return linkTo(methodOn(RestauranteController.class).buscar(id)).withRel(rel);
     }
@@ -58,6 +62,54 @@ public class LinkFactory {
         return linkToRestaurante(id, IanaLinkRelations.SELF.value());
     }
 
+    public static Link linkToRestaurantes(String rel) {
+        return linkTo(RestauranteController.class).withRel(rel);
+    }
+
+    public static Link linkToRestaurantes() {
+        return linkToRestaurantes(IanaLinkRelations.SELF.value());
+    }
+
+    public static Link linkToRestauranteResponsaveis(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class).listar(restauranteId)).withRel(rel);
+    }
+
+    public static Link linkToRestauranteResponsaveis(Long id) {
+        return linkToRestauranteResponsaveis(id, IanaLinkRelations.SELF.value());
+    }
+
+    public static Link linkToRestauranteFormasPagamento(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteFormaPagamentoController.class).listar(restauranteId)).withRel(rel);
+    }
+
+    // Formas Pagamento
+    public static Link linkToFormaPagamento(Long id, String rel) {
+        return linkTo(methodOn(FormaPagamentoController.class).buscar(id)).withRel(rel);
+    }
+
+    public static Link linkToFormaPagamento(Long id) {
+        return linkToFormaPagamento(id, IanaLinkRelations.SELF.value());
+    }
+
+    // Cozinha
+    public static Link linkToCozinhas(String rel) {
+        return linkTo(CozinhaController.class).withRel(rel);
+    }
+
+    public static Link linkToCozinhas() {
+        return linkToCozinhas(IanaLinkRelations.SELF.value());
+    }
+
+    public static Link linkToCozinha(Long cozinhaId, String rel) {
+        return linkTo(methodOn(CozinhaController.class)
+                .buscar(cozinhaId)).withRel(rel);
+    }
+
+    public static Link linkToCozinha(Long cozinhaId) {
+        return linkToCozinha(cozinhaId, IanaLinkRelations.SELF.value());
+    }
+
+    // Usuario
     public static Link linkToUsuario(Long id, String rel) {
         return linkTo(methodOn(UsuarioController.class).buscar(id)).withRel(rel);
     }
@@ -74,6 +126,7 @@ public class LinkFactory {
         return linkToUsuarios(IanaLinkRelations.SELF.value());
     }
 
+    // Grupo Usuario
     public static Link linkToGruposUsuario(Long id, String rel) {
         return linkTo(methodOn(UsuarioGrupoController.class).listar(id)).withRel(rel);
     }
@@ -82,22 +135,7 @@ public class LinkFactory {
         return linkToGruposUsuario(id, IanaLinkRelations.SELF.value());
     }
 
-    public static Link linkToResponsaveisRestaurante(Long id, String rel) {
-        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class).listar(id)).withRel(rel);
-    }
-
-    public static Link linkToResponsaveisRestaurante(Long id) {
-        return linkToResponsaveisRestaurante(id, IanaLinkRelations.SELF.value());
-    }
-
-    public static Link linkToFormaPagamento(Long id, String rel) {
-        return linkTo(methodOn(FormaPagamentoController.class).buscar(id)).withRel(rel);
-    }
-
-    public static Link linkToFormaPagamento(Long id) {
-        return linkToFormaPagamento(id, IanaLinkRelations.SELF.value());
-    }
-
+    // Cidade
     public static Link linkToCidade(Long id, String rel) {
         return linkTo(methodOn(CidadeController.class).buscar(id)).withRel(rel);
     }
@@ -114,6 +152,7 @@ public class LinkFactory {
         return linkToCidades(IanaLinkRelations.SELF.value());
     }
 
+    // Estado
     public static Link linkToEstado(Long id, String rel) {
         return linkTo(methodOn(EstadoController.class).buscar(id)).withRel(rel);
     }
@@ -130,19 +169,12 @@ public class LinkFactory {
         return linkToEstados(IanaLinkRelations.SELF.value());
     }
 
+    // Produto
     public static Link linkToProduto(Long restauranteId, Long produtoId, String rel) {
         return linkTo(methodOn(RestauranteProdutoController.class).buscar(restauranteId, produtoId)).withRel(rel);
     }
 
     public static Link linkToProduto(Long restauranteId, Long produtoId) {
         return linkToProduto(restauranteId, produtoId, IanaLinkRelations.SELF.value());
-    }
-
-    public static Link linkToCozinhas(String rel) {
-        return linkTo(CozinhaController.class).withRel(rel);
-    }
-
-    public static Link linkToCozinhas() {
-        return linkToCozinhas(IanaLinkRelations.SELF.value());
     }
 }
