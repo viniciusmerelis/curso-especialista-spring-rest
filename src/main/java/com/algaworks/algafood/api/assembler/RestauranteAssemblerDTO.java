@@ -33,6 +33,18 @@ public class RestauranteAssemblerDTO extends RepresentationModelAssemblerSupport
 		}
 		restauranteDTO.add(LinkFactory.linkToRestauranteFormasPagamento(restauranteDTO.getId(), "formas-pagamento"));
 		restauranteDTO.add(LinkFactory.linkToRestauranteResponsaveis(restauranteDTO.getId(), "responsaveis"));
+		if (restaurante.ativacaoPermitida()) {
+			restauranteDTO.add(LinkFactory.linkToRestauranteAtivacao(restauranteDTO.getId(), "ativar"));
+		}
+		if (restaurante.inativacaoPermitida()) {
+			restauranteDTO.add(LinkFactory.linkToRestauranteInativacao(restauranteDTO.getId(), "inativar"));
+		}
+		if (restaurante.aberturaPermitida()) {
+			restauranteDTO.add(LinkFactory.linkToRestauranteAbertura(restauranteDTO.getId(), "abrir"));
+		}
+		if (restaurante.fechamentoPermitido()) {
+			restauranteDTO.add(LinkFactory.linkToRestauranteFechamento(restauranteDTO.getId(), "fechar"));
+		}
 		return restauranteDTO;
 	}
 

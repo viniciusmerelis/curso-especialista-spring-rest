@@ -28,17 +28,22 @@ public class LinkFactory {
     public static final TemplateVariables PAGINACAO_VARIABLES = new TemplateVariables(
             new TemplateVariable("page", TemplateVariable.VariableType.REQUEST_PARAM),
             new TemplateVariable("size", TemplateVariable.VariableType.REQUEST_PARAM),
-            new TemplateVariable("sort", TemplateVariable.VariableType.REQUEST_PARAM));
+            new TemplateVariable("sort", TemplateVariable.VariableType.REQUEST_PARAM)
+    );
+
+    public static final TemplateVariables PROJECAO_VARIABLES = new TemplateVariables(
+            new TemplateVariable("projecao", TemplateVariable.VariableType.REQUEST_PARAM)
+    );
 
     // Pedido
-    public static Link linkToPedido() {
+    public static Link linkToPedidos(String rel) {
         TemplateVariables filtroVariables = new TemplateVariables(
                 new TemplateVariable("clienteId", TemplateVariable.VariableType.REQUEST_PARAM),
                 new TemplateVariable("restauranteId", TemplateVariable.VariableType.REQUEST_PARAM),
                 new TemplateVariable("dataCriacaoInicio", TemplateVariable.VariableType.REQUEST_PARAM),
                 new TemplateVariable("dataCriacaoFim", TemplateVariable.VariableType.REQUEST_PARAM));
         String pedidosUrl = linkTo(PedidoController.class).toUri().toString();
-        return Link.of(UriTemplate.of(pedidosUrl, PAGINACAO_VARIABLES.concat(filtroVariables)), "pedidos");
+        return Link.of(UriTemplate.of(pedidosUrl, PAGINACAO_VARIABLES.concat(filtroVariables)), rel);
     }
 
     public static Link linkToStatusPedido(StatusPedido status, String codigoPedido) {
@@ -63,7 +68,8 @@ public class LinkFactory {
     }
 
     public static Link linkToRestaurantes(String rel) {
-        return linkTo(RestauranteController.class).withRel(rel);
+        String restaurantesUrl = linkTo(RestauranteController.class).toUri().toString();
+        return Link.of(UriTemplate.of(restaurantesUrl, PROJECAO_VARIABLES), rel);
     }
 
     public static Link linkToRestaurantes() {
@@ -80,6 +86,22 @@ public class LinkFactory {
 
     public static Link linkToRestauranteFormasPagamento(Long restauranteId, String rel) {
         return linkTo(methodOn(RestauranteFormaPagamentoController.class).listar(restauranteId)).withRel(rel);
+    }
+
+    public static Link linkToRestauranteAbertura(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteController.class).abrir(restauranteId)).withRel(rel);
+    }
+
+    public static Link linkToRestauranteFechamento(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteController.class).fechar(restauranteId)).withRel(rel);
+    }
+
+    public static Link linkToRestauranteAtivacao(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteController.class).ativar(restauranteId)).withRel(rel);
+    }
+
+    public static Link linkToRestauranteInativacao(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteController.class).inativar(restauranteId)).withRel(rel);
     }
 
     // Formas Pagamento
