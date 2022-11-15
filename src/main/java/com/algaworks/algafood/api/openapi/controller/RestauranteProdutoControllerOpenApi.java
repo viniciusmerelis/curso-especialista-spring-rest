@@ -8,8 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 @Api(tags = "Produtos")
 public interface RestauranteProdutoControllerOpenApi {
@@ -18,11 +17,11 @@ public interface RestauranteProdutoControllerOpenApi {
             @ApiResponse(code = 400, message = "ID do restaurante inválido", response = Problem.class),
             @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    List<ProdutoDTO> listar(
+    CollectionModel<ProdutoDTO> listar(
             @ApiParam(value = "ID do restaurante", example = "1", required = true)
             Long restauranteId,
             @ApiParam(value = "Indica se deve ou não incluir produtos inativos no resultado da listagem", example = "false", defaultValue = "false")
-            boolean incluirInativos);
+            Boolean incluirInativos);
 
     @ApiOperation("Busca um produto de um restaurante")
     @ApiResponses({

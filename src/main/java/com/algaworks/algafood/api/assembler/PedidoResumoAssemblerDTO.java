@@ -23,7 +23,7 @@ public class PedidoResumoAssemblerDTO extends RepresentationModelAssemblerSuppor
 	public PedidoResumoDTO toModel(Pedido pedido) {
 		PedidoResumoDTO pedidoResumoDTO = createModelWithId(pedido.getId(), pedido);
 		mapper.map(pedido, pedidoResumoDTO);
-		pedidoResumoDTO.add(LinkFactory.linkToPedido());
+		pedidoResumoDTO.add(LinkFactory.linkToPedidos("pedidos"));
 		pedidoResumoDTO.getRestaurante().add(LinkFactory.linkToRestaurante(pedidoResumoDTO.getRestaurante().getId()));
 		pedidoResumoDTO.getCliente().add(LinkFactory.linkToUsuario(pedidoResumoDTO.getCliente().getId()));
 		return pedidoResumoDTO;
