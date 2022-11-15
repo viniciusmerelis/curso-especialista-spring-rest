@@ -5,10 +5,13 @@ import com.algaworks.algafood.api.controller.CozinhaController;
 import com.algaworks.algafood.api.controller.EstadoController;
 import com.algaworks.algafood.api.controller.FluxoPedidoController;
 import com.algaworks.algafood.api.controller.FormaPagamentoController;
+import com.algaworks.algafood.api.controller.GrupoController;
+import com.algaworks.algafood.api.controller.GrupoPermissaoController;
 import com.algaworks.algafood.api.controller.PedidoController;
 import com.algaworks.algafood.api.controller.RestauranteController;
 import com.algaworks.algafood.api.controller.RestauranteFormaPagamentoController;
 import com.algaworks.algafood.api.controller.RestauranteProdutoController;
+import com.algaworks.algafood.api.controller.RestauranteProdutoFotoController;
 import com.algaworks.algafood.api.controller.RestauranteUsuarioResponsavelController;
 import com.algaworks.algafood.api.controller.UsuarioController;
 import com.algaworks.algafood.api.controller.UsuarioGrupoController;
@@ -176,6 +179,19 @@ public class LinkFactory {
         return linkToUsuarios(IanaLinkRelations.SELF.value());
     }
 
+    // Grupo
+    public static Link linkToGrupos(String rel) {
+        return linkTo(GrupoController.class).withRel(rel);
+    }
+
+    public static Link linkToGrupos() {
+        return linkToGrupos(IanaLinkRelations.SELF.value());
+    }
+
+    public static Link linkToGrupoPermissoes(Long grupoId, String rel) {
+        return linkTo(methodOn(GrupoPermissaoController.class).listar(grupoId)).withRel(rel);
+    }
+
     // Grupo Usuario
     public static Link linkToGruposUsuario(Long id, String rel) {
         return linkTo(methodOn(UsuarioGrupoController.class).listar(id)).withRel(rel);
@@ -234,6 +250,14 @@ public class LinkFactory {
 
     public static Link linkToProdutos(Long restauranteId) {
         return linkToProdutos(restauranteId, IanaLinkRelations.SELF.value());
+    }
+
+    public static Link linkToProdutoFoto(Long restauranteId, Long produtoId, String rel) {
+        return linkTo(methodOn(RestauranteProdutoFotoController.class).buscar(restauranteId, produtoId)).withRel(rel);
+    }
+
+    public static Link linkToProdutoFoto(Long restauranteId, Long produtoId) {
+        return linkToProdutoFoto(restauranteId, produtoId, IanaLinkRelations.SELF.value());
     }
 
 }

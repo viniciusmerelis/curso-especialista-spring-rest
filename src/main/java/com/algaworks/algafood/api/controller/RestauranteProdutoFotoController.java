@@ -45,7 +45,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
     @GetMapping
     public FotoProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         FotoProduto fotoProduto = catalogoFotoService.buscarOuFalhar(restauranteId, produtoId);
-        return fotoProdutoAssembler.toDto(fotoProduto);
+        return fotoProdutoAssembler.toModel(fotoProduto);
     }
 
     @GetMapping(produces = MediaType.ALL_VALUE)
@@ -77,7 +77,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId,
                                         @PathVariable Long produtoId, @Valid FotoProdutoInput fotoProdutoInput,
-                                        @RequestPart(required = true) MultipartFile arquivo) throws IOException {
+                                        @RequestPart MultipartFile arquivo) throws IOException {
 
         Produto produto = produtoService.buscarOuFalhar(restauranteId, produtoId);
         FotoProduto foto = new FotoProduto();
@@ -87,7 +87,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
         foto.setContentType(arquivo.getContentType());
         foto.setTamanho(arquivo.getSize());
         FotoProduto fotoSalva = catalogoFotoService.salvar(foto, arquivo.getInputStream());
-        return fotoProdutoAssembler.toDto(fotoSalva);
+        return fotoProdutoAssembler.toModel(fotoSalva);
     }
 
     @Override

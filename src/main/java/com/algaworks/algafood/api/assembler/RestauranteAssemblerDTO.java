@@ -32,6 +32,7 @@ public class RestauranteAssemblerDTO extends RepresentationModelAssemblerSupport
 			restauranteDTO.getEndereco().getCidade().add(LinkFactory.linkToCidade(restauranteDTO.getEndereco().getCidade().getId()));
 		}
 		restauranteDTO.add(LinkFactory.linkToRestauranteFormasPagamento(restauranteDTO.getId(), "formas-pagamento"));
+		restauranteDTO.add(LinkFactory.linkToProdutos(restaurante.getId(), "produtos"));
 		restauranteDTO.add(LinkFactory.linkToRestauranteResponsaveis(restauranteDTO.getId(), "responsaveis"));
 		if (restaurante.ativacaoPermitida()) {
 			restauranteDTO.add(LinkFactory.linkToRestauranteAtivacao(restauranteDTO.getId(), "ativar"));

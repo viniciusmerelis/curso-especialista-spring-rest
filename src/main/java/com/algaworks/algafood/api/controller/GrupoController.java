@@ -1,11 +1,15 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
+import com.algaworks.algafood.api.assembler.GrupoAssemblerDTO;
+import com.algaworks.algafood.api.assembler.disassembler.GrupoInputDisassemblerDTO;
+import com.algaworks.algafood.api.model.GrupoDTO;
+import com.algaworks.algafood.api.model.input.GrupoInputDTO;
 import com.algaworks.algafood.api.openapi.controller.GrupoControllerOpenApi;
+import com.algaworks.algafood.domain.model.Grupo;
+import com.algaworks.algafood.domain.repository.GrupoRepository;
+import com.algaworks.algafood.domain.service.GrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,13 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.GrupoAssemblerDTO;
-import com.algaworks.algafood.api.assembler.disassembler.GrupoInputDisassemblerDTO;
-import com.algaworks.algafood.api.model.GrupoDTO;
-import com.algaworks.algafood.api.model.input.GrupoInputDTO;
-import com.algaworks.algafood.domain.model.Grupo;
-import com.algaworks.algafood.domain.repository.GrupoRepository;
-import com.algaworks.algafood.domain.service.GrupoService;
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -44,16 +43,16 @@ public class GrupoController implements GrupoControllerOpenApi {
 	
 	@Override
 	@GetMapping
-	public List<GrupoDTO> listar() {
+	public CollectionModel<GrupoDTO> listar() {
 		List<Grupo> todosGrupos = grupoRepository.findAll();
-		return grupoAssemblerDTO.toCollectionDto(todosGrupos);
+		return grupoAssemblerDTO.toCollectionModel(todosGrupos);
 	}
 	
 	@Override
 	@GetMapping("/{grupoId}")
 	public GrupoDTO buscar(@PathVariable Long grupoId) {
 		Grupo grupo = grupoService.buscarOuFalhar(grupoId);
-		return grupoAssemblerDTO.toDto(grupo);
+		return grupoAssemblerDTO.toModel(grupo);
 	}
 	
 	@Override
@@ -62,7 +61,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 	public GrupoDTO adicionar(@RequestBody GrupoInputDTO grupoInputDTO) {
 		Grupo grupo = grupoDisassemblerDTO.toDomainObject(grupoInputDTO);
 		grupo = grupoService.salvar(grupo);
-		return grupoAssemblerDTO.toDto(grupo);
+		return grupoAssemblerDTO.toModel(grupo);
 	}
 	
 	@Override
@@ -71,7 +70,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 		Grupo grupoAtual = grupoService.buscarOuFalhar(grupoId);
 		grupoDisassemblerDTO.copyToDomainObject(grupoInputDTO, grupoAtual);
 		grupoAtual = grupoService.salvar(grupoAtual);
-		return grupoAssemblerDTO.toDto(grupoAtual);
+		return grupoAssemblerDTO.toModel(grupoAtual);
 	}
 	
 	@Override

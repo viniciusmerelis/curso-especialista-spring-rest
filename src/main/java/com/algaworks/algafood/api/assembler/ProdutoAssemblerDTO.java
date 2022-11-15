@@ -21,9 +21,10 @@ public class ProdutoAssemblerDTO extends RepresentationModelAssemblerSupport<Pro
 
 	@Override
 	public ProdutoDTO toModel(Produto produto) {
-		ProdutoDTO produtoDTO = createModelWithId(produto.getId(), produto);
+		ProdutoDTO produtoDTO = createModelWithId(produto.getId(), produto, produto.getRestaurante().getId());
 		mapper.map(produto, produtoDTO);
 		produtoDTO.add(LinkFactory.linkToProdutos(produto.getRestaurante().getId(), "produtos"));
+		produtoDTO.add(LinkFactory.linkToProdutoFoto(produto.getRestaurante().getId(), produto.getId(), "foto"));
 		return produtoDTO;
 	}
 }
