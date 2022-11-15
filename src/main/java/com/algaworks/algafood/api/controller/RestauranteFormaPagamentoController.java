@@ -35,7 +35,8 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
 		CollectionModel<FormaPagamentoDTO> formaPagamentoDTOS = formaPagamentoAssemblerDTO.toCollectionModel(restaurante.getFormasPagamento())
 				.removeLinks()
-				.add(LinkFactory.linkToRestauranteFormasPagamento(restauranteId));
+				.add(LinkFactory.linkToRestauranteFormasPagamento(restauranteId))
+				.add(LinkFactory.linkToRestauranteFormaPagamentoAssociar(restauranteId, "associar"));
 		formaPagamentoDTOS.getContent().forEach(formaPagamento -> formaPagamento.add(
 				LinkFactory.linkToRestauranteFormaPagamentoDesassociar(restauranteId, formaPagamento.getId(), "desassociar")));
 		return formaPagamentoDTOS;
@@ -44,8 +45,9 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 	@Override
 	@PutMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void associar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
+	public ResponseEntity<Void> associar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
 		restauranteService.associarFormaPagamento(restauranteId, formaPagamentoId);
+		return ResponseEntity.noContent().build();
 	}
 	
 	@Override

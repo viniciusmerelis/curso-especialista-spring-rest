@@ -1,14 +1,18 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
+import com.algaworks.algafood.api.LinkFactory;
+import com.algaworks.algafood.api.assembler.ProdutoAssemblerDTO;
+import com.algaworks.algafood.api.assembler.disassembler.ProdutoInputDisassemblerDTO;
+import com.algaworks.algafood.api.model.ProdutoDTO;
+import com.algaworks.algafood.api.model.input.ProdutoInputDTO;
 import com.algaworks.algafood.api.openapi.controller.RestauranteProdutoControllerOpenApi;
-import com.algaworks.algafood.domain.model.Pedido;
+import com.algaworks.algafood.domain.model.Produto;
+import com.algaworks.algafood.domain.model.Restaurante;
+import com.algaworks.algafood.domain.repository.ProdutoRepository;
+import com.algaworks.algafood.domain.service.ProdutoService;
+import com.algaworks.algafood.domain.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,15 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembler.ProdutoAssemblerDTO;
-import com.algaworks.algafood.api.assembler.disassembler.ProdutoInputDisassemblerDTO;
-import com.algaworks.algafood.api.model.ProdutoDTO;
-import com.algaworks.algafood.api.model.input.ProdutoInputDTO;
-import com.algaworks.algafood.domain.model.Produto;
-import com.algaworks.algafood.domain.model.Restaurante;
-import com.algaworks.algafood.domain.repository.ProdutoRepository;
-import com.algaworks.algafood.domain.service.ProdutoService;
-import com.algaworks.algafood.domain.service.RestauranteService;
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/restaurantes/{restauranteId}/produtos", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -52,8 +49,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 
 	@Override
 	@GetMapping
-	public List<ProdutoDTO> listar(@PathVariable Long restauranteId,
-								   @RequestParam(required = false) boolean incluirInativos) {
+	public CollectionModel<ProdutoDTO> listar(@PathVariable Long restauranteId, @RequestParam(required = false, defaultValue = "false") Boolean incluirInativos) {
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
 		List<Produto> todosProdutos = null;
 		if (incluirInativos) {
@@ -61,14 +57,14 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		} else {
 			todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
 		} 
-		return produtoAssemblerDTO.toCollectionDto(todosProdutos);
+		return produtoAssemblerDTO.toCollectionModel(todosProdutos).add(LinkFactory.linkToProdutos(restauranteId));
 	}
 
 	@Override
 	@GetMapping("/{produtoId}")
 	public ProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 		Produto produto = produtoService.buscarOuFalhar(restauranteId, produtoId);
-		return produtoAssemblerDTO.toDto(produto);
+		return produtoAssemblerDTO.toModel(produto);
 	}
 
 	@Override
@@ -79,7 +75,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		Produto produto = produtoInputDisassemblerDTO.toDomainObject(produtoInputDTO);
 		produto.setRestaurante(restaurante);
 		produto = produtoService.salvar(produto);
-		return produtoAssemblerDTO.toDto(produto);
+		return produtoAssemblerDTO.toModel(produto);
 	}
 
 	@Override
@@ -89,7 +85,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		Produto produtoAtual = produtoService.buscarOuFalhar(restauranteId, produtoId);
 		produtoInputDisassemblerDTO.copyToDomainObject(produtoInputDTO, produtoAtual);
 		produtoAtual = produtoService.salvar(produtoAtual);
-		return produtoAssemblerDTO.toDto(produtoAtual);
+		return produtoAssemblerDTO.toModel(produtoAtual);
 	}
 
 }

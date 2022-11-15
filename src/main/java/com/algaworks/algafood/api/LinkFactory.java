@@ -84,6 +84,14 @@ public class LinkFactory {
         return linkToRestauranteResponsaveis(id, IanaLinkRelations.SELF.value());
     }
 
+    public static Link linkToRestauranteResponsavelAssociar(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class).associar(restauranteId, null)).withRel(rel);
+    }
+
+    public static Link linkToRestauranteResponsavelDesassociar(Long restauranteId, Long usuarioId, String rel) {
+        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class).desassociar(restauranteId, usuarioId)).withRel(rel);
+    }
+
     public static Link linkToRestauranteFormasPagamento(Long restauranteId, String rel) {
         return linkTo(methodOn(RestauranteFormaPagamentoController.class).listar(restauranteId)).withRel(rel);
     }
@@ -94,6 +102,10 @@ public class LinkFactory {
 
     public static Link linkToRestauranteFormaPagamentoDesassociar(Long restauranteId, Long formaPagamentoId, String rel) {
         return linkTo(methodOn(RestauranteFormaPagamentoController.class).desassociar(restauranteId, formaPagamentoId)).withRel(rel);
+    }
+
+    public static Link linkToRestauranteFormaPagamentoAssociar(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteFormaPagamentoController.class).associar(restauranteId, null)).withRel(rel);
     }
 
     public static Link linkToRestauranteAbertura(Long restauranteId, String rel) {
@@ -215,4 +227,13 @@ public class LinkFactory {
     public static Link linkToProduto(Long restauranteId, Long produtoId) {
         return linkToProduto(restauranteId, produtoId, IanaLinkRelations.SELF.value());
     }
+
+    public static Link linkToProdutos(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteProdutoController.class).listar(restauranteId, null)).withRel(rel);
+    }
+
+    public static Link linkToProdutos(Long restauranteId) {
+        return linkToProdutos(restauranteId, IanaLinkRelations.SELF.value());
+    }
+
 }
