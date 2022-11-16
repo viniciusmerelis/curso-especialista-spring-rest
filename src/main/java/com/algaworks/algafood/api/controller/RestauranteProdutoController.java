@@ -51,9 +51,9 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 	@GetMapping
 	public CollectionModel<ProdutoDTO> listar(@PathVariable Long restauranteId, @RequestParam(required = false, defaultValue = "false") Boolean incluirInativos) {
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-		List<Produto> todosProdutos = null;
+		List<Produto> todosProdutos;
 		if (incluirInativos) {
-			todosProdutos = produtoRepository.findByRestaurante(restaurante);
+			todosProdutos = produtoRepository.findTodosByRestaurante(restaurante);
 		} else {
 			todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
 		} 

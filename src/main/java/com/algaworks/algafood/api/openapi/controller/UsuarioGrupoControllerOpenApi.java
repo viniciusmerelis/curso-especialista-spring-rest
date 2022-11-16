@@ -7,14 +7,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 @Api(tags = "Usuários")
 public interface UsuarioGrupoControllerOpenApi {
     @ApiOperation("Lista os grupos associados a um usuário")
     @ApiResponses(@ApiResponse(code = 404, message = "Usuário não encontrado", response = Problem.class))
-    List<GrupoDTO> listar(@ApiParam(value = "ID do usuário", example = "1", required = true) Long usuarioId);
+    CollectionModel<GrupoDTO> listar(@ApiParam(value = "ID do usuário", example = "1", required = true) Long usuarioId);
 
     @ApiOperation("Associação de grupo com usuário")
     @ApiResponses({
