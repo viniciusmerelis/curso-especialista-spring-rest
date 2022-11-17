@@ -25,7 +25,7 @@ public class UsuarioAssemblerDTO extends RepresentationModelAssemblerSupport<Usu
         UsuarioDTO usuarioDTO = createModelWithId(usuario.getId(), usuario);
         mapper.map(usuario, usuarioDTO);
         usuarioDTO.add(LinkFactory.linkToUsuarios("usuarios"));
-        usuarioDTO.add(LinkFactory.linkToGruposUsuario(usuarioDTO.getId(), "grupos-usuario"));
+        usuarioDTO.add(LinkFactory.linkToUsuarioGrupos(usuarioDTO.getId(), "grupos-usuario"));
         return usuarioDTO;
     }
 

@@ -8,6 +8,7 @@ import com.algaworks.algafood.api.controller.FormaPagamentoController;
 import com.algaworks.algafood.api.controller.GrupoController;
 import com.algaworks.algafood.api.controller.GrupoPermissaoController;
 import com.algaworks.algafood.api.controller.PedidoController;
+import com.algaworks.algafood.api.controller.PermissaoController;
 import com.algaworks.algafood.api.controller.RestauranteController;
 import com.algaworks.algafood.api.controller.RestauranteFormaPagamentoController;
 import com.algaworks.algafood.api.controller.RestauranteProdutoController;
@@ -188,17 +189,47 @@ public class LinkFactory {
         return linkToGrupos(IanaLinkRelations.SELF.value());
     }
 
+    // Usuario Grupo
+    public static Link linkToUsuarioGrupos(Long id, String rel) {
+        return linkTo(methodOn(UsuarioGrupoController.class).listar(id)).withRel(rel);
+    }
+
+    public static Link linkToUsuarioGrupos(Long id) {
+        return linkToUsuarioGrupos(id, IanaLinkRelations.SELF.value());
+    }
+
+    public static Link linkToUsuarioGrupoAssociar(Long usuarioId, String rel) {
+        return linkTo(methodOn(UsuarioGrupoController.class).associar(usuarioId, null)).withRel(rel);
+    }
+
+    public static Link linkToUsuarioGrupoDesassociar(Long usuarioId, Long grupoId, String rel) {
+        return linkTo(methodOn(UsuarioGrupoController.class).desassociar(usuarioId, grupoId)).withRel(rel);
+    }
+
+    // Permissao
+    public static Link linkToPermissoes(String rel) {
+        return linkTo(PermissaoController.class).withRel(rel);
+    }
+
+    public static Link linkToPermissoes() {
+        return linkToPermissoes(IanaLinkRelations.SELF.value());
+    }
+
+    // Grupo Permissao
     public static Link linkToGrupoPermissoes(Long grupoId, String rel) {
         return linkTo(methodOn(GrupoPermissaoController.class).listar(grupoId)).withRel(rel);
     }
 
-    // Grupo Usuario
-    public static Link linkToGruposUsuario(Long id, String rel) {
-        return linkTo(methodOn(UsuarioGrupoController.class).listar(id)).withRel(rel);
+    public static Link linkToGrupoPermissoes(Long grupoId) {
+        return linkToGrupoPermissoes(grupoId, IanaLinkRelations.SELF.value());
     }
 
-    public static Link linkToGruposUsuario(Long id) {
-        return linkToGruposUsuario(id, IanaLinkRelations.SELF.value());
+    public static Link linkToGrupoPermissaoAssociar(Long grupoId, String rel) {
+        return linkTo(methodOn(GrupoPermissaoController.class).associar(grupoId, null)).withRel(rel);
+    }
+
+    public static Link linkToGrupoPermissaoDesassociar(Long grupoId, Long permissaoId, String rel) {
+        return linkTo(methodOn(GrupoPermissaoController.class).desassociar(grupoId, permissaoId)).withRel(rel);
     }
 
     // Cidade
