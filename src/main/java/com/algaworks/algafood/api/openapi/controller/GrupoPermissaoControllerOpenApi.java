@@ -7,8 +7,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 @Api(tags = "Grupos")
 public interface GrupoPermissaoControllerOpenApi {
@@ -17,7 +17,7 @@ public interface GrupoPermissaoControllerOpenApi {
             @ApiResponse(code = 400, message = "ID do grupo inválido", response = Problem.class),
             @ApiResponse(code = 404, message = "Grupo não encontrado", response = Problem.class)
     })
-    List<PermissaoDTO> listar(@ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId);
+    CollectionModel<PermissaoDTO> listar(@ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId);
 
     @ApiOperation("Associação de permissão com grupo")
     @ApiResponses({
@@ -25,8 +25,8 @@ public interface GrupoPermissaoControllerOpenApi {
             @ApiResponse(code = 404, message = "Grupo ou permissão não encontrada",
                     response = Problem.class)
     })
-    void associarPermissao(@ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId,
-                           @ApiParam(value = "ID da permissão", example = "1", required = true) Long permissaoId);
+    ResponseEntity<Void> associar(@ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId,
+                                  @ApiParam(value = "ID da permissão", example = "1", required = true) Long permissaoId);
 
     @ApiOperation("Desassociação de permissão com grupo")
     @ApiResponses({
@@ -34,6 +34,6 @@ public interface GrupoPermissaoControllerOpenApi {
             @ApiResponse(code = 404, message = "Grupo ou permissão não encontrada",
                     response = Problem.class)
     })
-    void desassociarPermissao(@ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId,
-                              @ApiParam(value = "ID da permissão", example = "1", required = true) Long permissaoId);
+    ResponseEntity<Void> desassociar(@ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId,
+                                     @ApiParam(value = "ID da permissão", example = "1", required = true) Long permissaoId);
 }

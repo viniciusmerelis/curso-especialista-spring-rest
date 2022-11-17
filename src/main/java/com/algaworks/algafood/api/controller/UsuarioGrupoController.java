@@ -1,10 +1,12 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.LinkFactory;
 import com.algaworks.algafood.api.openapi.controller.UsuarioGrupoControllerOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,21 +34,27 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
 	@GetMapping
 	public CollectionModel<GrupoDTO> listar(@PathVariable Long usuarioId) {
 		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
-		return grupoAssemblerDTO.toCollectionModel(usuario.getGrupos());
+		CollectionModel<GrupoDTO> gruposDTO = grupoAssemblerDTO.toCollectionModel(usuario.getGrupos())
+				.removeLinks()
+				.add(LinkFactory.linkToUsuarioGrupoAssociar(usuarioId, "associar"));
+		gruposDTO.getContent().forEach(grupo -> grupo.add(LinkFactory.linkToUsuarioGrupoDesassociar(usuarioId, grupo.getId(), "desassociar")));
+		return gruposDTO;
 	}
 	
 	@Override
 	@PutMapping("/{grupoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void associar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
+	public ResponseEntity<Void> associar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
 		usuarioService.associoarGrupo(usuarioId, grupoId);
+		return ResponseEntity.noContent().build();
 	}
 	
 	@Override
 	@DeleteMapping("/{grupoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void desassociar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
+	public ResponseEntity<Void> desassociar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
 		usuarioService.desassocioarGrupo(usuarioId, grupoId);
+		return ResponseEntity.noContent().build();
 	}
 	
 }
