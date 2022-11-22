@@ -3,6 +3,7 @@ package com.algaworks.algafood.api;
 import com.algaworks.algafood.api.controller.CidadeController;
 import com.algaworks.algafood.api.controller.CozinhaController;
 import com.algaworks.algafood.api.controller.EstadoController;
+import com.algaworks.algafood.api.controller.EstatisticaController;
 import com.algaworks.algafood.api.controller.FluxoPedidoController;
 import com.algaworks.algafood.api.controller.FormaPagamentoController;
 import com.algaworks.algafood.api.controller.GrupoController;
@@ -291,4 +292,20 @@ public class LinkFactory {
         return linkToProdutoFoto(restauranteId, produtoId, IanaLinkRelations.SELF.value());
     }
 
+    // Estatistica
+    public static Link linkToEstatisticas(String rel) {
+        return linkTo(EstatisticaController.class).withRel(rel);
+    }
+
+    public static Link linkToEstatisticasVendasDiarias(String rel) {
+        TemplateVariables filtroVariables = new TemplateVariables(
+                new TemplateVariable("restauranteId", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("dataCriacaoInicio", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("dataCriacaoFim", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("timeOffset", TemplateVariable.VariableType.REQUEST_PARAM)
+        );
+        String pedidosUrl = linkTo(methodOn(EstatisticaController.class)
+                .consultarVendasDiarias(null, null)).toUri().toString();
+        return Link.of(UriTemplate.of(pedidosUrl, filtroVariables), rel);
+    }
 }

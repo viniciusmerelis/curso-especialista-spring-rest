@@ -5,7 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.hateoas.CollectionModel;
 
-@Api(tags = "permissoes")
+@Api(tags = "Permissoes")
 public interface PermissaoControllerOpenApi {
 
     @ApiOperation("Lista as permissões")

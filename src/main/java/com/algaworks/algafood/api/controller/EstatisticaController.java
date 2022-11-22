@@ -1,11 +1,13 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.LinkFactory;
 import com.algaworks.algafood.api.openapi.controller.EstatisticaControllerOpenApi;
 import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
 import com.algaworks.algafood.domain.model.dto.VendaDiaria;
 import com.algaworks.algafood.domain.service.VendaQueryService;
 import com.algaworks.algafood.domain.service.VendaReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,5 +49,16 @@ public class EstatisticaController implements EstatisticaControllerOpenApi {
                 .contentType(MediaType.APPLICATION_PDF)
                 .headers(headers)
                 .body(bytesPdf);
+    }
+
+    @Override
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public EstatisticasDTO estatisticas() {
+        var estatisticas = new EstatisticasDTO();
+        estatisticas.add(LinkFactory.linkToEstatisticasVendasDiarias("vendas-diarias"));
+        return estatisticas;
+    }
+
+    public static class EstatisticasDTO extends RepresentationModel<EstatisticasDTO> {
     }
 }

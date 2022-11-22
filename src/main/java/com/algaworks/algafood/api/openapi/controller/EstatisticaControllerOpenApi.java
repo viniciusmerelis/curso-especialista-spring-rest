@@ -2,17 +2,17 @@ package com.algaworks.algafood.api.openapi.controller;
 
 import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
 import com.algaworks.algafood.domain.model.dto.VendaDiaria;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import static com.algaworks.algafood.api.controller.EstatisticaController.*;
 
 import java.util.List;
 
+@Api("Estatisticas")
 public interface EstatisticaControllerOpenApi {
 
     @ApiOperation("Consulta estatísticas de vendas diárias")
@@ -29,4 +29,7 @@ public interface EstatisticaControllerOpenApi {
     ResponseEntity<byte[]> consultarVendasDiariasPdf(
             VendaDiariaFilter filtro,
             String timeOffset);
+
+    @ApiOperation(value = "Estatísticas", hidden = true)
+    EstatisticasDTO estatisticas();
 }

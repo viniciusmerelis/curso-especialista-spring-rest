@@ -23,6 +23,7 @@ public class RootEntryPointController {
         rootEntryPointModel.add(LinkFactory.linkToFormasPagamento("formas-pagamento"));
         rootEntryPointModel.add(LinkFactory.linkToEstados("estados"));
         rootEntryPointModel.add(LinkFactory.linkToCidades("cidades"));
+        rootEntryPointModel.add(LinkFactory.linkToEstatisticas("estatisticas"));
         return rootEntryPointModel;
     }
 
