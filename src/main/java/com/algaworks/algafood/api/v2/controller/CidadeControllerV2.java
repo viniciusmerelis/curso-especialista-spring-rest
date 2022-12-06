@@ -1,11 +1,10 @@
-package com.algaworks.algafood.api.v1.controller;
+package com.algaworks.algafood.api.v2.controller;
 
 import com.algaworks.algafood.api.ResourceUriHelper;
-import com.algaworks.algafood.api.v1.assembler.CidadeAssemblerDTO;
-import com.algaworks.algafood.api.v1.assembler.disassembler.CidadeInputDisassemblerDTO;
-import com.algaworks.algafood.api.v1.model.CidadeDTO;
-import com.algaworks.algafood.api.v1.model.input.CidadeInputDTO;
-import com.algaworks.algafood.api.v1.openapi.controller.CidadeControllerOpenApi;
+import com.algaworks.algafood.api.v2.assembler.CidadeAssemblerDTOV2;
+import com.algaworks.algafood.api.v2.assembler.CidadeInputDisassemblerDTOV2;
+import com.algaworks.algafood.api.v2.model.CidadeDTOV2;
+import com.algaworks.algafood.api.v2.model.input.CidadeInputDTOV2;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cidade;
@@ -27,8 +26,8 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/v1/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CidadeController implements CidadeControllerOpenApi {
+@RequestMapping(path = "/v2/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
+public class CidadeControllerV2 {
     @Autowired
     private CidadeRepository cidadeRepository;
 
@@ -36,41 +35,38 @@ public class CidadeController implements CidadeControllerOpenApi {
     private CidadeService cidadeService;
 
     @Autowired
-    private CidadeAssemblerDTO cidadeAssemblerDTO;
+    private CidadeAssemblerDTOV2 cidadeAssemblerDTO;
 
     @Autowired
-    private CidadeInputDisassemblerDTO cidadeDisassemblerDTO;
+    private CidadeInputDisassemblerDTOV2 cidadeDisassemblerDTO;
 
-    @Override
     @GetMapping
-    public CollectionModel<CidadeDTO> listar() {
+    public CollectionModel<CidadeDTOV2> listar() {
         List<Cidade> cidades = cidadeRepository.findAll();
         return cidadeAssemblerDTO.toCollectionModel(cidades);
     }
 
-    @Override
     @GetMapping("/{cidadeId}")
-    public CidadeDTO buscar(@PathVariable Long cidadeId) {
+    public CidadeDTOV2 buscar(@PathVariable Long cidadeId) {
         Cidade cidade = cidadeService.buscarOuFalhar(cidadeId);
         return cidadeAssemblerDTO.toModel(cidade);
     }
 
-    @Override
     @PostMapping
-    public CidadeDTO adicionar(@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
+    public CidadeDTOV2 adicionar(@RequestBody @Valid CidadeInputDTOV2 cidadeInputDTO) {
         try {
             Cidade cidade = cidadeDisassemblerDTO.toDomainObject(cidadeInputDTO);
             cidade = cidadeService.salvar(cidade);
-            ResourceUriHelper.addUriInResponseHeader(cidade.getId());
-            return cidadeAssemblerDTO.toModel(cidade);
+            CidadeDTOV2 cidadeDTOV2 = cidadeAssemblerDTO.toModel(cidade);
+            ResourceUriHelper.addUriInResponseHeader(cidadeDTOV2.getIdCidade());
+            return cidadeDTOV2;
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }
     }
 
-    @Override
     @PutMapping("/{cidadeId}")
-    public CidadeDTO atualizar(@PathVariable Long cidadeId, @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
+    public CidadeDTOV2 atualizar(@PathVariable Long cidadeId, @RequestBody @Valid CidadeInputDTOV2 cidadeInputDTO) {
         try {
             Cidade cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
             cidadeDisassemblerDTO.copyToDomainObject(cidadeInputDTO, cidadeAtual);
@@ -81,7 +77,6 @@ public class CidadeController implements CidadeControllerOpenApi {
         }
     }
 
-    @Override
     @DeleteMapping("/{cidadeId}")
     public void remover(@PathVariable Long cidadeId) {
         cidadeService.excluir(cidadeId);

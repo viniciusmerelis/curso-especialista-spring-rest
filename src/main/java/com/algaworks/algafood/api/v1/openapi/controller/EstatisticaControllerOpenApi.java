@@ -12,7 +12,7 @@ import static com.algaworks.algafood.api.v1.controller.EstatisticaController.*;
 
 import java.util.List;
 
-@Api("Estatisticas")
+@Api(tags = "Estatisticas")
 public interface EstatisticaControllerOpenApi {
 
     @ApiOperation("Consulta estatísticas de vendas diárias")

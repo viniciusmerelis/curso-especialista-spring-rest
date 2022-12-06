@@ -67,11 +67,12 @@ public class SpringFoxConfig implements WebMvcConfigurer {
     TypeResolver typeResolver = new TypeResolver();
 
     @Bean
-    public Docket apiDocket() {
+    public Docket apiDocketV1() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("V1")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
-                .paths(PathSelectors.any())
+                .paths(PathSelectors.ant("/v1/**"))
                 .build()
                 .useDefaultResponseMessages(false)
                 .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
@@ -102,7 +103,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         typeResolver.resolve(CollectionModel.class, RestauranteBasicoDTO.class), RestaurantesBasicoModelOpenApi.class))
                 .alternateTypeRules(AlternateTypeRules.newRule(
                         typeResolver.resolve(CollectionModel.class, UsuarioDTO.class), UsuariosModelOpenApi.class))
-                .apiInfo(apiInfo())
+                .apiInfo(apiInfoV1())
                 .tags(
                         new Tag("Cidades", "Gerencia as Cidades"),
                         new Tag("Grupos", "Gerencia os grupos de usuários"),
@@ -116,6 +117,26 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         new Tag("Permissões", "Gerencia as permissões"),
                         new Tag("Estatísticas", "Estatísticas da AlgaFood")
                 );
+    }
+
+    @Bean
+    public Docket apiDocketV2() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("V2")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
+                .paths(PathSelectors.ant("/v2/**"))
+                .build()
+                .useDefaultResponseMessages(false)
+                .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
+                .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
+                .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
+                .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
+                .additionalModels(typeResolver.resolve(Problem.class))
+                .ignoredParameterTypes(ServletWebRequest.class, URL.class, URL.class, URLStreamHandler.class, Resource.class, File.class, InputStream.class)
+                .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+                .directModelSubstitute(Links.class, LinksModelOpenApi.class)
+                .apiInfo(apiInfoV2());
     }
 
     private List<ResponseMessage> globalGetResponseMessages() {
@@ -171,11 +192,20 @@ public class SpringFoxConfig implements WebMvcConfigurer {
         );
     }
 
-    public ApiInfo apiInfo() {
+    public ApiInfo apiInfoV1() {
         return new ApiInfoBuilder()
                 .title("Algafood API")
                 .description("API aberta para clientes e restaurantes")
                 .version("1")
+                .contact(new Contact("AlgaFood", "https://www.algafood.com", "contato@algafood.com"))
+                .build();
+    }
+
+    public ApiInfo apiInfoV2() {
+        return new ApiInfoBuilder()
+                .title("Algafood API")
+                .description("API aberta para clientes e restaurantes")
+                .version("2")
                 .contact(new Contact("AlgaFood", "https://www.algafood.com", "contato@algafood.com"))
                 .build();
     }
