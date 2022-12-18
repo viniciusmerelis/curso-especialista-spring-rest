@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.algaworks.algafood</groupId>
-	<artifactId>algafood-api-jpa</artifactId>
+	<artifactId>algafood-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>algafood-api-jpa</name>
+	<name>algafood-api</name>
 	<description>Projeto do treinamento ESR</description>
 	<properties>
 		<java.version>11</java.version>
