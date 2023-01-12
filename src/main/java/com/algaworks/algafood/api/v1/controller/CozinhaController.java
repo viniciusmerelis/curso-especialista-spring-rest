@@ -71,6 +71,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 		return cozinhaAssemblerDTO.toModel(cozinha);
 	}
 
+	@PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -80,6 +81,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 		return cozinhaAssemblerDTO.toModel(cozinha);
 	}
 
+	@PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
 	@Override
 	@PutMapping("/{cozinhaId}")
 	public CozinhaDTO atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid CozinhaInputDTO cozinhaInputDTO) {
@@ -89,6 +91,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 		return cozinhaAssemblerDTO.toModel(cozinhaAtual);
 	}
 
+	@PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
 	@Override
 	@DeleteMapping("/{cozinhaId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
