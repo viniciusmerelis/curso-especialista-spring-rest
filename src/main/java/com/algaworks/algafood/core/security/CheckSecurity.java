@@ -12,12 +12,12 @@ public @interface CheckSecurity {
     public @interface Cozinhas {
         @Retention(RetentionPolicy.RUNTIME)
         @Target(METHOD)
-        @PreAuthorize("isAuthenticated()")
+        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
         public @interface PodeConsultar { }
 
         @Retention(RetentionPolicy.RUNTIME)
         @Target(METHOD)
-        @PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_COZINHAS')")
         public @interface PodeEditar { }
     }
 }
