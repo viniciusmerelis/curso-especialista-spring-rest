@@ -9,27 +9,34 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.METHOD;
 
 public @interface CheckSecurity {
-    public @interface Cozinhas {
+    @interface Cozinhas {
         @Retention(RetentionPolicy.RUNTIME)
         @Target(METHOD)
         @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
-        public @interface PodeConsultar { }
+        @interface PodeConsultar { }
 
         @Retention(RetentionPolicy.RUNTIME)
         @Target(METHOD)
         @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_COZINHAS')")
-        public @interface PodeEditar { }
+        @interface PodeEditar { }
     }
 
-    public @interface Restaurantes {
+    @interface Restaurantes {
         @Retention(RetentionPolicy.RUNTIME)
         @Target(METHOD)
         @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
-        public @interface PodeConsultar { }
+        @interface PodeConsultar { }
 
         @Retention(RetentionPolicy.RUNTIME)
         @Target(METHOD)
         @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_RESTAURANTES')")
-        public @interface PodeEditar { }
+        @interface PodeGerenciarCadastro { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and " +
+                "hasAuthority('EDITAR_RESTAURANTES') or " +
+                "@algaSecurity.gerenciaRestaurante(#restauranteId)")
+        @interface PodeGerenciarFuncionamento { }
     }
 }
