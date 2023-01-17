@@ -71,7 +71,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 	}
 
 	@Override
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ProdutoDTO adicionar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoInputDTO produtoInputDTO) {
@@ -83,7 +83,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 	}
 
 	@Override
-	@CheckSecurity.Restaurantes.PodeEditar
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
 	@PutMapping("/{produtoId}")
 	public ProdutoDTO atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId,
 								@RequestBody @Valid ProdutoInputDTO produtoInputDTO) {
