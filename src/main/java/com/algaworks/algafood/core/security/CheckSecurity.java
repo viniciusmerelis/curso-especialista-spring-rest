@@ -1,5 +1,6 @@
 package com.algaworks.algafood.core.security;
 
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.lang.annotation.Retention;
@@ -38,5 +39,15 @@ public @interface CheckSecurity {
                 "hasAuthority('EDITAR_RESTAURANTES') or " +
                 "@algaSecurity.gerenciaRestaurante(#restauranteId)")
         @interface PodeGerenciarFuncionamento { }
+    }
+
+    @interface Pedidos {
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+        @PostAuthorize("hasAuthority('CONSULTAR_PEDIDOS') or " +
+                "@algaSecurity.getUsuarioId() == returnObject.cliente.id or " +
+                "@algaSecurity.gerenciaRestaurante(returnObject.restaurante.id)")
+        @interface PodeBuscar { }
     }
 }
