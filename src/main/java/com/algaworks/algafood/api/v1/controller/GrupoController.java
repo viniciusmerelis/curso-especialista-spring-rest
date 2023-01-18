@@ -5,6 +5,7 @@ import com.algaworks.algafood.api.v1.assembler.disassembler.GrupoInputDisassembl
 import com.algaworks.algafood.api.v1.model.GrupoDTO;
 import com.algaworks.algafood.api.v1.model.input.GrupoInputDTO;
 import com.algaworks.algafood.api.v1.openapi.controller.GrupoControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.repository.GrupoRepository;
 import com.algaworks.algafood.domain.service.GrupoService;
@@ -42,6 +43,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 	private GrupoInputDisassemblerDTO grupoDisassemblerDTO;
 	
 	@Override
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping
 	public CollectionModel<GrupoDTO> listar() {
 		List<Grupo> todosGrupos = grupoRepository.findAll();
@@ -49,6 +51,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 	}
 	
 	@Override
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping("/{grupoId}")
 	public GrupoDTO buscar(@PathVariable Long grupoId) {
 		Grupo grupo = grupoService.buscarOuFalhar(grupoId);
@@ -56,6 +59,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 	}
 	
 	@Override
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public GrupoDTO adicionar(@RequestBody GrupoInputDTO grupoInputDTO) {
@@ -65,6 +69,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 	}
 	
 	@Override
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@PutMapping("/{grupoId}")
 	public GrupoDTO atualizar(@PathVariable Long grupoId, @RequestBody @Valid GrupoInputDTO grupoInputDTO) {
 		Grupo grupoAtual = grupoService.buscarOuFalhar(grupoId);
@@ -74,6 +79,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 	}
 	
 	@Override
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@DeleteMapping("/{grupoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long grupoId) {

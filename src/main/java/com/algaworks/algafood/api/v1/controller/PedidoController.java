@@ -64,6 +64,7 @@ public class PedidoController implements PedidoControllerOpenApi {
     private AlgaSecurity algaSecurity;
 
     @Override
+    @CheckSecurity.Pedidos.PodePesquisar
     @GetMapping
     public PagedModel<PedidoResumoDTO> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
         Pageable pageableTraduzido = traduzirPageable(pageable);
@@ -81,6 +82,7 @@ public class PedidoController implements PedidoControllerOpenApi {
     }
 
     @Override
+    @CheckSecurity.Pedidos.PodeCriar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PedidoDTO adicionar(@RequestBody @Valid PedidoInputDTO pedidoInputDTO) {

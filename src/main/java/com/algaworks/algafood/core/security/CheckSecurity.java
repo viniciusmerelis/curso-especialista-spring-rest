@@ -49,5 +49,91 @@ public @interface CheckSecurity {
                 "@algaSecurity.getUsuarioId() == returnObject.cliente.id or " +
                 "@algaSecurity.gerenciaRestaurante(returnObject.restaurante.id)")
         @interface PodeBuscar { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_READ') and  (hasAuthority('CONSULTAR_PEDIDOS') or " +
+                "@algaSecurity.getUsuarioId() == #filtro.clienteId or " +
+                "@algaSecurity.gerenciaRestaurante(#filtro.restauranteId))")
+        @interface PodePesquisar { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and isAuthenticated()")
+        @interface PodeCriar { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and " +
+                "(hasAuthority('GERENCIAR_PEDIDOS') or " +
+                "@algaSecurity.gerenciaRestauranteDoPedido(#codigoPedido))")
+        @interface PodeGerenciarPedidos { }
+    }
+
+    @interface FormasPagamento {
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+        @interface PodeConsultar { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_FORMAS_PAGAMENTO')")
+        @interface PodeEditar { }
+    }
+
+    @interface Cidades {
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+        @interface PodeConsultar { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_CIDADES')")
+        @interface PodeEditar { }
+    }
+
+    @interface Estados {
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+        @interface PodeConsultar { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_ESTADOS')")
+        @interface PodeEditar { }
+    }
+
+    @interface UsuariosGruposPermissoes {
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority(SCOPE_WRITE) and @algaSecurity.getUsuarioId() == #usuarioId")
+        @interface PodeAlterarPropriaSenha { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and " +
+                "(hasAuthority('EDITAR_USUARIOS_GRUPOS_PERMISSOES') or " +
+                "@algaSecurity.getUsuarioId() == #usuarioId)")
+        @interface PodeAlterarUsuario { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('CONSULTAR_USUARIOS_GRUPOS_PERMISSOES')")
+        @interface PodeConsultar { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_USUARIOS_GRUPOS_PERMISSOES')")
+        @interface PodeEditar { }
+    }
+
+    @interface Estatisticas {
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('GERAR_RELATORIOS')")
+        @interface PodeConsultar { }
     }
 }
