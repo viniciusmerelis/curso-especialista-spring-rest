@@ -49,5 +49,12 @@ public @interface CheckSecurity {
                 "@algaSecurity.getUsuarioId() == returnObject.cliente.id or " +
                 "@algaSecurity.gerenciaRestaurante(returnObject.restaurante.id)")
         @interface PodeBuscar { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_READ') and  (hasAuthority('CONSULTAR_PEDIDOS') or " +
+                "@algaSecurity.getUsuarioId() == #filtro.clienteId or " +
+                "@algaSecurity.gerenciaRestaurante(#filtro.restauranteId))")
+        @interface PodePesquisar { }
     }
 }
