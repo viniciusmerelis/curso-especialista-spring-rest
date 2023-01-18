@@ -7,6 +7,7 @@ import com.algaworks.algafood.api.v1.model.input.SenhaInputDTO;
 import com.algaworks.algafood.api.v1.model.input.UsuarioComSenhaInputDTO;
 import com.algaworks.algafood.api.v1.model.input.UsuarioInputDTO;
 import com.algaworks.algafood.api.v1.openapi.controller.UsuarioControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.UsuarioRepository;
 import com.algaworks.algafood.domain.service.UsuarioService;
@@ -40,6 +41,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     private UsuarioInputDisassemblerDTO usuarioInputDisassemblerDTO;
 
     @Override
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<UsuarioDTO> listar() {
         List<Usuario> todosUsuarios = usuarioRepository.findAll();
@@ -47,6 +49,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     }
 
     @Override
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping("/{usuarioId}")
     public UsuarioDTO buscar(@PathVariable Long usuarioId) {
         Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
@@ -54,6 +57,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     }
 
     @Override
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioDTO adicionar(@RequestBody UsuarioComSenhaInputDTO usuarioInputDTO) {
@@ -63,6 +67,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     }
 
     @Override
+    @CheckSecurity.UsuariosGruposPermissoes.PodeAlterarUsuario
     @PutMapping("/{usuarioId}")
     public UsuarioDTO atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioInputDTO usuarioInputDTO) {
         Usuario usuarioAtual = usuarioService.buscarOuFalhar(usuarioId);
@@ -72,6 +77,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     }
 
     @Override
+    @CheckSecurity.UsuariosGruposPermissoes.PodeAlterarPropriaSenha
     @PutMapping("/{usuarioId}/senha")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void alterarSenha(@PathVariable Long usuarioId, @RequestBody @Valid SenhaInputDTO senha) {

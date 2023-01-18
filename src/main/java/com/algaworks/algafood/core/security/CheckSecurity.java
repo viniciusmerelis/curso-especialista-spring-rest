@@ -105,4 +105,28 @@ public @interface CheckSecurity {
         @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_ESTADOS')")
         @interface PodeEditar { }
     }
+
+    @interface UsuariosGruposPermissoes {
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority(SCOPE_WRITE) and @algaSecurity.getUsuarioId() == #usuarioId")
+        @interface PodeAlterarPropriaSenha { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and " +
+                "(hasAuthority('EDITAR_USUARIOS_GRUPOS_PERMISSOES') or " +
+                "@algaSecurity.getUsuarioId() == #usuarioId)")
+        @interface PodeAlterarUsuario { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('CONSULTAR_USUARIOS_GRUPOS_PERMISSOES')")
+        @interface PodeConsultar { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_USUARIOS_GRUPOS_PERMISSOES')")
+        @interface PodeEditar { }
+    }
 }
