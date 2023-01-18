@@ -56,5 +56,17 @@ public @interface CheckSecurity {
                 "@algaSecurity.getUsuarioId() == #filtro.clienteId or " +
                 "@algaSecurity.gerenciaRestaurante(#filtro.restauranteId))")
         @interface PodePesquisar { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and isAuthenticated()")
+        @interface PodeCriar { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and " +
+                "(hasAuthority('GERENCIAR_PEDIDOS') or " +
+                "@algaSecurity.gerenciaRestauranteDoPedido(#codigoPedido))")
+        @interface PodeGerenciarPedidos { }
     }
 }
