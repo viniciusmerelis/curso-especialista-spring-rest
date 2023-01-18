@@ -6,6 +6,7 @@ import com.algaworks.algafood.api.v1.assembler.disassembler.CidadeInputDisassemb
 import com.algaworks.algafood.api.v1.model.CidadeDTO;
 import com.algaworks.algafood.api.v1.model.input.CidadeInputDTO;
 import com.algaworks.algafood.api.v1.openapi.controller.CidadeControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cidade;
@@ -42,6 +43,7 @@ public class CidadeController implements CidadeControllerOpenApi {
     private CidadeInputDisassemblerDTO cidadeDisassemblerDTO;
 
     @Override
+    @CheckSecurity.Cidades.PodeConsultar
     @GetMapping
     public CollectionModel<CidadeDTO> listar() {
         List<Cidade> cidades = cidadeRepository.findAll();
@@ -49,6 +51,7 @@ public class CidadeController implements CidadeControllerOpenApi {
     }
 
     @Override
+    @CheckSecurity.Cidades.PodeConsultar
     @GetMapping("/{cidadeId}")
     public CidadeDTO buscar(@PathVariable Long cidadeId) {
         Cidade cidade = cidadeService.buscarOuFalhar(cidadeId);
@@ -56,6 +59,7 @@ public class CidadeController implements CidadeControllerOpenApi {
     }
 
     @Override
+    @CheckSecurity.Cidades.PodeEditar
     @PostMapping
     public CidadeDTO adicionar(@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
         try {
@@ -69,6 +73,7 @@ public class CidadeController implements CidadeControllerOpenApi {
     }
 
     @Override
+    @CheckSecurity.Cidades.PodeEditar
     @PutMapping("/{cidadeId}")
     public CidadeDTO atualizar(@PathVariable Long cidadeId, @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
         try {
@@ -82,6 +87,7 @@ public class CidadeController implements CidadeControllerOpenApi {
     }
 
     @Override
+    @CheckSecurity.Cidades.PodeEditar
     @DeleteMapping("/{cidadeId}")
     public void remover(@PathVariable Long cidadeId) {
         cidadeService.excluir(cidadeId);
