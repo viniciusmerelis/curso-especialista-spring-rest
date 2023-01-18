@@ -69,4 +69,16 @@ public @interface CheckSecurity {
                 "@algaSecurity.gerenciaRestauranteDoPedido(#codigoPedido))")
         @interface PodeGerenciarPedidos { }
     }
+
+    @interface FormasPagamento {
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+        @interface PodeConsultar { }
+
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(METHOD)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_FORMAS_PAGAMENTO')")
+        @interface PodeEditar { }
+    }
 }
