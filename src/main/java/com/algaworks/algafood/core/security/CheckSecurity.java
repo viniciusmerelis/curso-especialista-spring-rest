@@ -64,9 +64,7 @@ public @interface CheckSecurity {
 
         @Retention(RetentionPolicy.RUNTIME)
         @Target(METHOD)
-        @PreAuthorize("hasAuthority('SCOPE_WRITE') and " +
-                "(hasAuthority('GERENCIAR_PEDIDOS') or " +
-                "@algaSecurity.gerenciaRestauranteDoPedido(#codigoPedido))")
+        @PreAuthorize("@algaSecurity.podeGerenciarPedidos(#codigoPedido)")
         @interface PodeGerenciarPedidos { }
     }
 

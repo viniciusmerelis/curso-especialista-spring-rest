@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.assembler;
 import com.algaworks.algafood.api.v1.LinkFactory;
 import com.algaworks.algafood.api.v1.controller.PedidoController;
 import com.algaworks.algafood.api.v1.model.PedidoDTO;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.domain.model.Pedido;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ public class PedidoAssemblerDTO extends RepresentationModelAssemblerSupport<Pedi
     @Autowired
     private ModelMapper mapper;
 
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
     public PedidoAssemblerDTO() {
         super(PedidoController.class, PedidoDTO.class);
     }
@@ -24,7 +28,12 @@ public class PedidoAssemblerDTO extends RepresentationModelAssemblerSupport<Pedi
         PedidoDTO pedidoDTO = createModelWithId(pedido.getCodigo(), pedido);
         mapper.map(pedido, pedidoDTO);
         pedidoDTO.add(LinkFactory.linkToPedidos("pedidos"));
-        pedido.getStatus().statusDisponiveisParaAlteracao().forEach(status -> pedidoDTO.add(LinkFactory.linkToStatusPedido(status, pedidoDTO.getCodigo())));
+        pedido.getStatus().statusDisponiveisParaAlteracao()
+                .forEach(status -> {
+                    if (algaSecurity.podeGerenciarPedidos(pedido.getCodigo())) {
+                        pedidoDTO.add(LinkFactory.linkToStatusPedido(status, pedidoDTO.getCodigo()));
+                    }
+                });
         pedidoDTO.getRestaurante().add(LinkFactory.linkToRestaurante(pedidoDTO.getRestaurante().getId()));
         pedidoDTO.getCliente().add(LinkFactory.linkToUsuario(pedidoDTO.getCliente().getId()));
         pedidoDTO.getFormaPagamento().add(LinkFactory.linkToFormaPagamento(pedidoDTO.getFormaPagamento().getId()));
