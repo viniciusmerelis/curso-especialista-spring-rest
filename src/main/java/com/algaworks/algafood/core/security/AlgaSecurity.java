@@ -8,6 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class AlgaSecurity {
 
@@ -27,7 +29,7 @@ public class AlgaSecurity {
     }
 
     public boolean gerenciaRestaurante(Long restauranteId) {
-        if (restauranteId == null) {
+        if (Objects.isNull(restauranteId)) {
             return false;
         }
         return restauranteRepository.existeResponsavel(restauranteId, getUsuarioId());
@@ -35,5 +37,18 @@ public class AlgaSecurity {
 
     public boolean gerenciaRestauranteDoPedido(String codigoPedido) {
         return pedidoRepository.isPedidoGerenciadoPor(codigoPedido, getUsuarioId());
+    }
+
+    public boolean usuarioAutenticadoIgual(Long usuarioId) {
+        return Objects.nonNull(getUsuarioId()) && Objects.nonNull(usuarioId) && getUsuarioId().equals(usuarioId);
+    }
+
+    public boolean podeGerenciarPedidos(String codigoPedido) {
+        return hasAuthority("SCOPE_WRITE") && (hasAuthority("GERENCIAR_PEDIDOS") || gerenciaRestauranteDoPedido(codigoPedido));
+    }
+
+    private boolean hasAuthority(String authorityName) {
+        return getAuthentication().getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals(authorityName));
     }
 }
