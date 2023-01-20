@@ -27,18 +27,30 @@ public class PedidoAssemblerDTO extends RepresentationModelAssemblerSupport<Pedi
     public PedidoDTO toModel(Pedido pedido) {
         PedidoDTO pedidoDTO = createModelWithId(pedido.getCodigo(), pedido);
         mapper.map(pedido, pedidoDTO);
-        pedidoDTO.add(LinkFactory.linkToPedidos("pedidos"));
+        if (algaSecurity.podePesquisarPedidos()) {
+            pedidoDTO.add(LinkFactory.linkToPedidos("pedidos"));
+        }
         pedido.getStatus().statusDisponiveisParaAlteracao()
                 .forEach(status -> {
                     if (algaSecurity.podeGerenciarPedidos(pedido.getCodigo())) {
                         pedidoDTO.add(LinkFactory.linkToStatusPedido(status, pedidoDTO.getCodigo()));
                     }
                 });
-        pedidoDTO.getRestaurante().add(LinkFactory.linkToRestaurante(pedidoDTO.getRestaurante().getId()));
-        pedidoDTO.getCliente().add(LinkFactory.linkToUsuario(pedidoDTO.getCliente().getId()));
-        pedidoDTO.getFormaPagamento().add(LinkFactory.linkToFormaPagamento(pedidoDTO.getFormaPagamento().getId()));
-        pedidoDTO.getEnderecoEntrega().getCidade().add(LinkFactory.linkToCidade(pedidoDTO.getEnderecoEntrega().getCidade().getId()));
-        pedidoDTO.getItens().forEach(item -> item.add(LinkFactory.linkToProduto(pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto")));
+        if (algaSecurity.podeConsultarRestaurantes()) {
+            pedidoDTO.getRestaurante().add(LinkFactory.linkToRestaurante(pedidoDTO.getRestaurante().getId()));
+        }
+        if (algaSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            pedidoDTO.getCliente().add(LinkFactory.linkToUsuario(pedidoDTO.getCliente().getId()));
+        }
+        if (algaSecurity.podeConsultarFormasPagamento()) {
+            pedidoDTO.getFormaPagamento().add(LinkFactory.linkToFormaPagamento(pedidoDTO.getFormaPagamento().getId()));
+        }
+        if (algaSecurity.podeConsultarCidades()) {
+            pedidoDTO.getEnderecoEntrega().getCidade().add(LinkFactory.linkToCidade(pedidoDTO.getEnderecoEntrega().getCidade().getId()));
+        }
+        if (algaSecurity.podeConsultarRestaurantes()) {
+            pedidoDTO.getItens().forEach(item -> item.add(LinkFactory.linkToProduto(pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto")));
+        }
         return pedidoDTO;
     }
 }

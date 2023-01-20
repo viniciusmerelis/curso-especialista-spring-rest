@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.assembler;
 import com.algaworks.algafood.api.v1.LinkFactory;
 import com.algaworks.algafood.api.v1.controller.FormaPagamentoController;
 import com.algaworks.algafood.api.v1.model.FormaPagamentoDTO;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ public class FormaPagamentoAssemblerDTO extends RepresentationModelAssemblerSupp
 
 	@Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private AlgaSecurity algaSecurity;
     
     public FormaPagamentoAssemblerDTO() {
         super(FormaPagamentoController.class, FormaPagamentoDTO.class);
@@ -24,12 +28,18 @@ public class FormaPagamentoAssemblerDTO extends RepresentationModelAssemblerSupp
     public FormaPagamentoDTO toModel(FormaPagamento formaPagamento) {
         FormaPagamentoDTO formaPagamentoDTO = createModelWithId(formaPagamento.getId(), formaPagamento);
         mapper.map(formaPagamento, formaPagamentoDTO);
-        formaPagamentoDTO.add(LinkFactory.linkToFormasPagamento("formas-pagamento"));
+        if (algaSecurity.podeConsultarFormasPagamento()) {
+            formaPagamentoDTO.add(LinkFactory.linkToFormasPagamento("formas-pagamento"));
+        }
         return formaPagamentoDTO;
     }
 
     @Override
     public CollectionModel<FormaPagamentoDTO> toCollectionModel(Iterable<? extends FormaPagamento> entities) {
-        return super.toCollectionModel(entities).add(LinkFactory.linkToFormasPagamento());
+        CollectionModel<FormaPagamentoDTO> collectionModel = super.toCollectionModel(entities);
+        if (algaSecurity.podeConsultarFormasPagamento()) {
+            collectionModel.add(LinkFactory.linkToFormasPagamento());
+        }
+        return collectionModel;
     }
 }

@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.v1.controller;
 
 import com.algaworks.algafood.api.v1.LinkFactory;
 import com.algaworks.algafood.api.v1.openapi.controller.UsuarioGrupoControllerOpenApi;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.core.security.CheckSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -30,16 +31,20 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
 	
 	@Autowired
 	private GrupoAssemblerDTO grupoAssemblerDTO;
+
+	@Autowired
+	private AlgaSecurity algaSecurity;
 	
 	@Override
 	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping
 	public CollectionModel<GrupoDTO> listar(@PathVariable Long usuarioId) {
 		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
-		CollectionModel<GrupoDTO> gruposDTO = grupoAssemblerDTO.toCollectionModel(usuario.getGrupos())
-				.removeLinks()
-				.add(LinkFactory.linkToUsuarioGrupoAssociar(usuarioId, "associar"));
-		gruposDTO.getContent().forEach(grupo -> grupo.add(LinkFactory.linkToUsuarioGrupoDesassociar(usuarioId, grupo.getId(), "desassociar")));
+		CollectionModel<GrupoDTO> gruposDTO = grupoAssemblerDTO.toCollectionModel(usuario.getGrupos()).removeLinks();
+		if (algaSecurity.podeEditarUsuariosGruposPermissoes()) {
+			gruposDTO.add(LinkFactory.linkToUsuarioGrupoAssociar(usuarioId, "associar"));
+			gruposDTO.getContent().forEach(grupo -> grupo.add(LinkFactory.linkToUsuarioGrupoDesassociar(usuarioId, grupo.getId(), "desassociar")));
+		}
 		return gruposDTO;
 	}
 	

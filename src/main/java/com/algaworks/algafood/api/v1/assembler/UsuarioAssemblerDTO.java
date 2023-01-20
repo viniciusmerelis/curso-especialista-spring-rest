@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.assembler;
 import com.algaworks.algafood.api.v1.LinkFactory;
 import com.algaworks.algafood.api.v1.controller.UsuarioController;
 import com.algaworks.algafood.api.v1.model.UsuarioDTO;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.domain.model.Usuario;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class UsuarioAssemblerDTO extends RepresentationModelAssemblerSupport<Usu
 	@Autowired
     private ModelMapper mapper;
 
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
     public UsuarioAssemblerDTO() {
         super(UsuarioController.class, UsuarioDTO.class);
     }
@@ -24,8 +28,10 @@ public class UsuarioAssemblerDTO extends RepresentationModelAssemblerSupport<Usu
     public UsuarioDTO toModel(Usuario usuario) {
         UsuarioDTO usuarioDTO = createModelWithId(usuario.getId(), usuario);
         mapper.map(usuario, usuarioDTO);
-        usuarioDTO.add(LinkFactory.linkToUsuarios("usuarios"));
-        usuarioDTO.add(LinkFactory.linkToUsuarioGrupos(usuarioDTO.getId(), "grupos-usuario"));
+        if (algaSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            usuarioDTO.add(LinkFactory.linkToUsuarios("usuarios"));
+            usuarioDTO.add(LinkFactory.linkToUsuarioGrupos(usuarioDTO.getId(), "grupos-usuario"));
+        }
         return usuarioDTO;
     }
 
