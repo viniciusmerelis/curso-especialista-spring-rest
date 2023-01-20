@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.v1.LinkFactory;
 import com.algaworks.algafood.api.v1.assembler.FormaPagamentoAssemblerDTO;
 import com.algaworks.algafood.api.v1.model.FormaPagamentoDTO;
 import com.algaworks.algafood.api.v1.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.RestauranteService;
@@ -29,6 +30,9 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 	
 	@Autowired
 	private FormaPagamentoAssemblerDTO formaPagamentoAssemblerDTO;
+
+	@Autowired
+	private AlgaSecurity algaSecurity;
 	
 	@Override
 	@CheckSecurity.Restaurantes.PodeConsultar
@@ -37,10 +41,12 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
 		CollectionModel<FormaPagamentoDTO> formaPagamentoDTOS = formaPagamentoAssemblerDTO.toCollectionModel(restaurante.getFormasPagamento())
 				.removeLinks()
-				.add(LinkFactory.linkToRestauranteFormasPagamento(restauranteId))
-				.add(LinkFactory.linkToRestauranteFormaPagamentoAssociar(restauranteId, "associar"));
-		formaPagamentoDTOS.getContent().forEach(formaPagamento -> formaPagamento.add(
-				LinkFactory.linkToRestauranteFormaPagamentoDesassociar(restauranteId, formaPagamento.getId(), "desassociar")));
+				.add(LinkFactory.linkToRestauranteFormasPagamento(restauranteId));
+		if (algaSecurity.podeGerenciarFuncionamentoRestaurantes(restauranteId)) {
+			formaPagamentoDTOS.add(LinkFactory.linkToRestauranteFormaPagamentoAssociar(restauranteId, "associar"));
+			formaPagamentoDTOS.getContent().forEach(formaPagamento -> formaPagamento.add(
+					LinkFactory.linkToRestauranteFormaPagamentoDesassociar(restauranteId, formaPagamento.getId(), "desassociar")));
+		}
 		return formaPagamentoDTOS;
 	}
 	

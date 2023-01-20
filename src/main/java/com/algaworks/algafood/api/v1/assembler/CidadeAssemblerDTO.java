@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.assembler;
 import com.algaworks.algafood.api.v1.LinkFactory;
 import com.algaworks.algafood.api.v1.controller.CidadeController;
 import com.algaworks.algafood.api.v1.model.CidadeDTO;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.domain.model.Cidade;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class CidadeAssemblerDTO extends RepresentationModelAssemblerSupport<Cida
 	@Autowired
     private ModelMapper mapper;
 
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
     public CidadeAssemblerDTO() {
         super(CidadeController.class, CidadeDTO.class);
     }
@@ -24,13 +28,21 @@ public class CidadeAssemblerDTO extends RepresentationModelAssemblerSupport<Cida
     public CidadeDTO toModel(Cidade cidade) {
         CidadeDTO cidadeDTO = createModelWithId(cidade.getId(), cidade);
         mapper.map(cidade, cidadeDTO);
-        cidadeDTO.add(LinkFactory.linkToCidades("cidades"));
-        cidadeDTO.getEstado().add(LinkFactory.linkToEstado(cidadeDTO.getEstado().getId()));
+        if (algaSecurity.podeConsultarCidades()) {
+            cidadeDTO.add(LinkFactory.linkToCidades("cidades"));
+        }
+        if (algaSecurity.podeConsultarEstados()) {
+            cidadeDTO.getEstado().add(LinkFactory.linkToEstado(cidadeDTO.getEstado().getId()));
+        }
         return cidadeDTO;
     }
 
     @Override
     public CollectionModel<CidadeDTO> toCollectionModel(Iterable<? extends Cidade> entities) {
-        return super.toCollectionModel(entities).add(LinkFactory.linkToCidades());
+        CollectionModel<CidadeDTO> collectionModel = super.toCollectionModel(entities);
+        if (algaSecurity.podeConsultarCidades()) {
+            collectionModel.add(LinkFactory.linkToCidades());
+        }
+        return collectionModel;
     }
 }
