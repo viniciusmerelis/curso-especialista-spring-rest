@@ -16,13 +16,23 @@ services:
 
   algafood-api:
     image: algafood-api
+    command: ["/wait-for-it.sh", "algafood-mysql:3306", "-t", "30", "--", "java", "-jar", "api.jar"]
     environment:
       DB_HOST: algafood-mysql
       ID_CHAVE_ACESSO: AKIARXDSFGOKRW2Z4V34
       CHAVE_ACESSO_SECRETA: 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
-    ports:
-      - "8080:8080"
+      REMETENTE: "AlgaFood <vinicius.merelis@hotmail.com>"
     networks:
       - algafood-network
     depends_on:
       - algafood-mysql
+
+  algafood-proxy:
+    build: ./nginx
+    image: algafood-proxy
+    ports:
+      - "80:80"
+    networks:
+      - algafood-network
+    depends_on:
+      - algafood-api
