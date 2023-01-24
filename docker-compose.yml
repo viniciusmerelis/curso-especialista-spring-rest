@@ -22,6 +22,8 @@ services:
       ID_CHAVE_ACESSO: AKIARXDSFGOKRW2Z4V34
       CHAVE_ACESSO_SECRETA: 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
       REMETENTE: "AlgaFood <vinicius.merelis@hotmail.com>"
+      SPRING_SESSION_STORE_TYPE: redis
+      SPRING_REDIS_HOST: algafood-redis
     networks:
       - algafood-network
     depends_on:
@@ -36,3 +38,8 @@ services:
       - algafood-network
     depends_on:
       - algafood-api
+
+  algafood-redis:
+    image: redis:6.2.1-alpine
+    networks:
+      - algafood-network
