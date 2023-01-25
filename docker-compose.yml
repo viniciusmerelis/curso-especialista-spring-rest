@@ -10,7 +10,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: "admin123"
     ports:
-      - "3306:3306"
+      - "13306:3306"
     networks:
       - algafood-network
 
@@ -19,11 +19,9 @@ services:
     command: ["/wait-for-it.sh", "algafood-mysql:3306", "-t", "30", "--", "java", "-jar", "api.jar"]
     environment:
       DB_HOST: algafood-mysql
-      ID_CHAVE_ACESSO: AKIARXDSFGOKRW2Z4V34
-      CHAVE_ACESSO_SECRETA: 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
-      REMETENTE: "AlgaFood <vinicius.merelis@hotmail.com>"
       SPRING_SESSION_STORE_TYPE: redis
       SPRING_REDIS_HOST: algafood-redis
+      SPRING_PROFILES_ACTIVE: development
     networks:
       - algafood-network
     depends_on:
