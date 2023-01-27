@@ -184,19 +184,19 @@ values (6, 5, 3, 1, 87.2, 87.2, null);
 insert into oauth_client_details (client_id, resource_ids, client_secret, scope, authorized_grant_types,
                                   web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, autoapprove
 )
-values ('algafood-web', null, '$2a$12$aTFPO7nxrawZYY/WWaYS.O0OCtnSvF/723qmUPWjFYeEgh9bm6WlW', 'READ,WRITE', 'password',
+values ('algafood-web', null, '$2a$12$1kV5oIrp5LDEhIh9OF5gFuxoQFNXDA/d8jzojz5jbdTYvncVKUztG', 'READ,WRITE', 'password',
         null, null, 60 * 60 * 6, 60 * 24 * 60 * 60, null);
 
 insert into oauth_client_details (client_id, resource_ids, client_secret, scope, authorized_grant_types,
                                   web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, autoapprove
 )
-values ('foodanalytics', null, '$2a$12$aTFPO7nxrawZYY/WWaYS.O0OCtnSvF/723qmUPWjFYeEgh9bm6WlW',
+values ('foodanalytics', null, '$2a$12$1kV5oIrp5LDEhIh9OF5gFuxoQFNXDA/d8jzojz5jbdTYvncVKUztG',
         'READ,WRITE', 'authorization_code', 'http://localhost:8082', null, null, null, null);
 
 insert into oauth_client_details (client_id, resource_ids, client_secret, scope, authorized_grant_types,
                                   web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, autoapprove
 )
-values ('faturamento', null, '$2a$12$aTFPO7nxrawZYY/WWaYS.O0OCtnSvF/723qmUPWjFYeEgh9bm6WlW','READ,WRITE', 'client_credentials',
+values ('faturamento', null, '$2a$12$1kV5oIrp5LDEhIh9OF5gFuxoQFNXDA/d8jzojz5jbdTYvncVKUztG','READ,WRITE', 'client_credentials',
         null, 'CONSULTAR_PEDIDOS,GERAR_RELATORIOS',null, null, null);
 
 unlock tables;

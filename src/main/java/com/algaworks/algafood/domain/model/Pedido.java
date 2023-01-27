@@ -1,10 +1,13 @@
 package com.algaworks.algafood.domain.model;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import com.algaworks.algafood.domain.event.PedidoCanceladoEvent;
+import com.algaworks.algafood.domain.event.PedidoConfirmadoEvent;
+import com.algaworks.algafood.domain.exception.NegocioException;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
@@ -19,18 +22,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
-import com.algaworks.algafood.domain.event.PedidoCanceladoEvent;
-import com.algaworks.algafood.domain.event.PedidoConfirmadoEvent;
-import org.hibernate.annotations.CreationTimestamp;
-
-import com.algaworks.algafood.domain.exception.NegocioException;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springframework.data.domain.AbstractAggregateRoot;
-
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Pedido extends AbstractAggregateRoot<Pedido> {
@@ -81,14 +80,6 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
     	valorTotal = subtotal.add(taxaFrete);
     }
     
-    public void definirFrete() {
-    	setTaxaFrete(getRestaurante().getTaxaFrete());
-    }
-    
-    public void atribuirPedidoAosItens() {
-        getItens().forEach(item -> item.setPedido(this));
-    }
-    
     public void confirmar() {
     	setStatus(StatusPedido.CONFIRMADO);
     	setDataConfirmacao(OffsetDateTime.now());
@@ -118,5 +109,4 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
     private void gerarCodigo() {
     	setCodigo(UUID.randomUUID().toString());
     }
-    
 }
