@@ -35,7 +35,7 @@ public @interface CheckSecurity {
 
         @Retention(RetentionPolicy.RUNTIME)
         @Target(METHOD)
-        @PreAuthorize("@algaSecurity.podeGerenciarFuncionamentoRestaurantes()")
+        @PreAuthorize("@algaSecurity.podeGerenciarFuncionamentoRestaurantes(#restauranteId)")
         @interface PodeGerenciarFuncionamento { }
     }
 

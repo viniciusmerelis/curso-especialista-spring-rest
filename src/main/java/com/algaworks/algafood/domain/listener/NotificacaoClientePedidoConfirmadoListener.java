@@ -9,7 +9,6 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 public class NotificacaoClientePedidoConfirmadoListener {
-
     @Autowired
     private EnvioEmailService envioEmail;
 
