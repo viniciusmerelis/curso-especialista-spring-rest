@@ -52,7 +52,7 @@ public class AlgaSecurity {
     }
 
     public boolean usuarioAutenticadoIgual(Long usuarioId) {
-        return Objects.nonNull(getUsuarioId()) && Objects.nonNull(usuarioId) && getUsuarioId().equals(usuarioId);
+        return getUsuarioId() != null && usuarioId != null && getUsuarioId().equals(usuarioId);
     }
 
     public boolean podeGerenciarPedidos(String codigoPedido) {

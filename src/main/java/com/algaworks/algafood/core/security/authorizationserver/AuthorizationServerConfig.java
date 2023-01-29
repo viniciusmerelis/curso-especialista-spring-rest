@@ -100,8 +100,8 @@ public class AuthorizationServerConfig {
         RegisteredClient foodanalytics = RegisteredClient
                 .withId("3")
                 .clientId("foodanalytics")
-                .clientSecret(passwordEncoder.encode("web123"))
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+//                .clientSecret(passwordEncoder.encode("web123"))
+                .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .scope("READ")
                 .scope("WRITE")
@@ -112,6 +112,7 @@ public class AuthorizationServerConfig {
                 .redirectUri("http://www.foodanalytics.local:8082")
                 .clientSettings(ClientSettings.builder()
                         .requireAuthorizationConsent(true)
+                        .requireProofKey(true)
                         .build())
                 .build();
 
